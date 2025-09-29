@@ -5,7 +5,7 @@
   "openapi": "https://api.eliseai.com/openapi.json",
   "colors": {
     "primary": "#7639fa",
-    "light": "#FFD700",
+    "light": "#c2b9ff",
     "dark": "#190a4b"
   },
   "favicon": "/favicon.svg",
