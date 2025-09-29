@@ -4,9 +4,9 @@
   "name": "Mint Starter Kit",
   "openapi": "https://api.eliseai.com/openapi.json",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#347c75",
+    "light": "#FFD700",
+    "dark": "#000080"
   },
   "favicon": "/favicon.svg",
   "navigation": {
