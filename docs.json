@@ -4,9 +4,9 @@
   "name": "EliseAI Vendor API Docs",
   "openapi": "https://api.eliseai.com/openapi.json",
   "colors": {
-    "primary": "#347c75",
+    "primary": "#7639fa",
     "light": "#FFD700",
-    "dark": "#000080"
+    "dark": "#190a4b"
   },
   "favicon": "/favicon.svg",
   "navigation": {
