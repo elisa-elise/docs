@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Mint Starter Kit",
+  "theme": "willow",
+  "name": "EliseAI Vendor API Docs",
   "openapi": "https://api.eliseai.com/openapi.json",
   "colors": {
     "primary": "#347c75",
