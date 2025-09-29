@@ -1,11 +1,10 @@
 ---
 title: "Setting up Webhooks"
-description: "Webhook events are sent as POST requests to your specified endpoint. EliseAI tracks deliverability and success of all webhook events."
 ---
 
-<Info>
-  Best Practice: Handle webhooks asynchronously — record the webhook message, return a success response immediately, and process the event separately.
-</Info>
+Webhook events are sent as POST requests to the desired endpoint agreed upon with the EliseAI implementation team. 
+
+Best practice is to handle these asynchronously (i.e. record webhook message, return success response, and then separately handle processing) EliseAI tracks deliverability/success of all webhook events. Webhook events are provided with a signature. 
 
 ## Configuration
 
@@ -21,112 +20,19 @@ Whitelist these IPs if needed:
 All webhook events include a signature for security. To verify authenticity:
 
 ```python
-import hmac
-import hashlib
-
-WEBHOOK_SECRET = '<YOUR_WEBHOOK_SECRET>'
+WEBHOOK_SECRET = <YOUR_WEBHOOK_SECRET>
 raw_payload = request.get_data(as_text=True)
-received_signature = request.headers.get("X-Signature", "")
-
-expected_signature = hmac.new(
-    WEBHOOK_SECRET.encode(),
-    raw_payload.encode(),
-    hashlib.sha256
-).hexdigest()
-
-if hmac.compare_digest(received_signature, expected_signature):
-    print("Webhook verified successfully!", data)
+received_signature = request.headers.get("X-Signature", "")expected_signature = hmac.new( WEBHOOK_SECRET.encode(), raw_payload.encode(), hashlib.sha256 ).hexdigest()if hmac.compare_digest(received_signature, expected_signature): print("Webhook verified successfully!", data) 
 else:
-    print("Invalid signature")
+ 	print("Invalid signature")
 ```
 
-**Note:** All `event_date` values are in UTC.
+**Note:** All webhook events are sent with `event_date` as UTC.
 
-## Event Types
+<Card title="Webhook Documentation" icon="book" iconType="solid" href="https://eliseai.mintlify.app/api-reference/prospect/get-prospect" cta="View Documentation">
+  View Webhooks in EliseAI API
+</Card>
 
-| Event Type             | Description                                      |
-| :--------------------- | :----------------------------------------------- |
-| `ProspectUpdate`       | Prospect created or updated with new information |
-| `Handoff`              | Leasing agent intervention required              |
-| `ProspectEmailEvent`   | Email sent between Elise and prospect            |
-| `ProspectTextEvent`    | Text message sent between Elise and prospect     |
-| `ProspectVoiceAIEvent` | Prospect called VoiceAI                          |
-| `ProspectOptInEvent`   | Prospect opted into communication channel(s)     |
-| `ProspectOptOutEvent`  | Prospect opted out of communication channel(s)   |
-
-## Event Payloads
-
-### ProspectUpdate Event
-
-Triggered when a prospect is created or their information is updated.
-
-```python
-{
-   "type": "ProspectUpdate",
-   "event_id": "8d269f31-2acb-46b2-a37d-3b868cbd77f0",
-   "event_date": "2025-01-05T13:11:04.692817",
-   "elise_property_id": "55100",
-   "external_property_id": "FL14186",
-   "elise_prospect_id": "658d0923-3120-43be-9bf5-07a96996d324",
-   "external_prospect_id": "273fd72c-50f2-44fd-bfc4-21d14a915b1b",
-   "first_name": "Amanda",
-   "last_name": "Lopez",
-   "email": "ajlopez921@gmail.com",
-   "phone": "+13479849546",
-   "first_contact_type": "EMAIL",
-   "lead_sources": ["Zillow"],
-   "conversation_link": "https://app.meetelise.com/conv/mc/62a57050-cb66-11ef-bfe6-ce0a41068de4",
-   "is_general_property": false,
-   "earliest_move_in": null,
-   "latest_move_in": null,
-   "min_lease_length": null,
-   "max_lease_length": null,
-   "unit_preference": [],
-   "layout_preference": []
-}
-```
-
-### ProspectEmailEvent
-
-Triggered when an email is sent between Elise and a prospect.
-
-```python
-{
-   "type": "Email",
-   "event_id": "2aba0712-3410-45cf-aba1-41b8cebfb656",
-   "event_date": "2025-01-05T13:11:08.985799",
-   "elise_property_id": "55100",
-   "external_property_id": "FL14186",
-   "elise_prospect_id": "658d0923-3120-43be-9bf5-07a96996d324",
-   "external_prospect_id": "273fd72c-50f2-44fd-bfc4-21d14a915b1b",
-   "sender": "elise",
-   "from_address": "chloe.tx@living.rentprogress.com",
-   "to_addresses": ["ajlopez921@gmail.com"],
-   "cc_addresses": [],
-   "subject": "Home Inquiry at 5307 Sunset Canyon Drive",
-   "message": "<Full email message>"
-}
-```
-
-### ProspectTextEvent
-
-Triggered when a text message is sent between Elise and a prospect.
-
-```python
-{
-   "type": "Text",
-   "event_id": "33129b08-f5c9-47b7-82fb-2d5eeb268048",
-   "event_date": "2025-01-05T13:11:13.447054",
-   "elise_property_id": "55100",
-   "external_property_id": "FL14186",
-   "elise_prospect_id": "658d0923-3120-43be-9bf5-07a96996d324",
-   "external_prospect_id": "273fd72c-50f2-44fd-bfc4-21d14a915b1b",
-   "sender": "elise",
-   "from_phone_number": "+18552183383",
-   "to_phone_number": "+13479849546",
-   "message": "<Full text message>"
-}
-```
 
 <Note>
   **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
