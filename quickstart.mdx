@@ -1,79 +1,130 @@
 ---
-title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+title: "Setting up Webhooks"
+description: "Webhook events are sent as POST requests to your specified endpoint. EliseAI tracks deliverability and success of all webhook events.
+
+Best Practice: Handle webhooks asynchronously — record the webhook message, return a success response immediately, and process the event separately."
 ---
 
-## Get started in three steps
+## Configuration
 
-Get your documentation site running locally and make your first customization.
+### EliseAI IP Addresses
 
-### Step 1: Set up your local environment
+Whitelist these IPs if needed:
 
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
-    
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
-    
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
+- 44.235.137.208
+- 44.235.21.125
 
-### Step 2: Deploy your changes
+### Webhook Signature Verification
 
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
+All webhook events include a signature for security. To verify authenticity:
 
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
+```python
+import hmac
+import hashlib
 
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
+WEBHOOK_SECRET = '<YOUR_WEBHOOK_SECRET>'
+raw_payload = request.get_data(as_text=True)
+received_signature = request.headers.get("X-Signature", "")
 
-### Step 3: Go live
+expected_signature = hmac.new(
+    WEBHOOK_SECRET.encode(),
+    raw_payload.encode(),
+    hashlib.sha256
+).hexdigest()
 
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
+if hmac.compare_digest(received_signature, expected_signature):
+    print("Webhook verified successfully!", data)
+else:
+    print("Invalid signature")
+```
 
-## Next steps
+**Note:** All `event_date` values are in UTC.
 
-Now that you have your docs running, explore these key features:
+## Event Types
 
-<CardGroup cols={2}>
+| Event Type             | Description                                      |
+| :--------------------- | :----------------------------------------------- |
+| `ProspectUpdate`       | Prospect created or updated with new information |
+| `Handoff`              | Leasing agent intervention required              |
+| `ProspectEmailEvent`   | Email sent between Elise and prospect            |
+| `ProspectTextEvent`    | Text message sent between Elise and prospect     |
+| `ProspectVoiceAIEvent` | Prospect called VoiceAI                          |
+| `ProspectOptInEvent`   | Prospect opted into communication channel(s)     |
+| `ProspectOptOutEvent`  | Prospect opted out of communication channel(s)   |
 
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
+## Event Payloads
 
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
+### ProspectUpdate Event
 
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
+Triggered when a prospect is created or their information is updated.
 
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
+```python
+{
+   "type": "ProspectUpdate",
+   "event_id": "8d269f31-2acb-46b2-a37d-3b868cbd77f0",
+   "event_date": "2025-01-05T13:11:04.692817",
+   "elise_property_id": "55100",
+   "external_property_id": "FL14186",
+   "elise_prospect_id": "658d0923-3120-43be-9bf5-07a96996d324",
+   "external_prospect_id": "273fd72c-50f2-44fd-bfc4-21d14a915b1b",
+   "first_name": "Amanda",
+   "last_name": "Lopez",
+   "email": "ajlopez921@gmail.com",
+   "phone": "+13479849546",
+   "first_contact_type": "EMAIL",
+   "lead_sources": ["Zillow"],
+   "conversation_link": "https://app.meetelise.com/conv/mc/62a57050-cb66-11ef-bfe6-ce0a41068de4",
+   "is_general_property": false,
+   "earliest_move_in": null,
+   "latest_move_in": null,
+   "min_lease_length": null,
+   "max_lease_length": null,
+   "unit_preference": [],
+   "layout_preference": []
+}
+```
 
-</CardGroup>
+### ProspectEmailEvent
+
+Triggered when an email is sent between Elise and a prospect.
+
+```python
+{
+   "type": "Email",
+   "event_id": "2aba0712-3410-45cf-aba1-41b8cebfb656",
+   "event_date": "2025-01-05T13:11:08.985799",
+   "elise_property_id": "55100",
+   "external_property_id": "FL14186",
+   "elise_prospect_id": "658d0923-3120-43be-9bf5-07a96996d324",
+   "external_prospect_id": "273fd72c-50f2-44fd-bfc4-21d14a915b1b",
+   "sender": "elise",
+   "from_address": "chloe.tx@living.rentprogress.com",
+   "to_addresses": ["ajlopez921@gmail.com"],
+   "cc_addresses": [],
+   "subject": "Home Inquiry at 5307 Sunset Canyon Drive",
+   "message": "<Full email message>"
+}
+```
+
+### ProspectTextEvent
+
+Triggered when a text message is sent between Elise and a prospect.
+
+```python
+{
+   "type": "Text",
+   "event_id": "33129b08-f5c9-47b7-82fb-2d5eeb268048",
+   "event_date": "2025-01-05T13:11:13.447054",
+   "elise_property_id": "55100",
+   "external_property_id": "FL14186",
+   "elise_prospect_id": "658d0923-3120-43be-9bf5-07a96996d324",
+   "external_prospect_id": "273fd72c-50f2-44fd-bfc4-21d14a915b1b",
+   "sender": "elise",
+   "from_phone_number": "+18552183383",
+   "to_phone_number": "+13479849546",
+   "message": "<Full text message>"
+}
+```
 
 <Note>
   **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
