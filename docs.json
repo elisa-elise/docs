@@ -69,8 +69,8 @@
     }
   },
   "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+    "light": "/logo/eliseai-logo.png",
+    "dark": "/logo/eliseai-logo.png",
   },
   "navbar": {
     "links": [
