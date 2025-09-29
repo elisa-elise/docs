@@ -1,9 +1,10 @@
 {
+  "theme": "mint",
   "openapi": "openapi.json",
   "navigation": [
     {
       "group": "Getting Started",
-      "pages": ["introduction", "quickstart"]
+      "pages": ["introduction"]
     },
     {
       "group": "API Reference",
