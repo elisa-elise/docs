@@ -22,7 +22,10 @@ All webhook events include a signature for security. To verify authenticity:
 ```python
 WEBHOOK_SECRET = <YOUR_WEBHOOK_SECRET>
 raw_payload = request.get_data(as_text=True)
-received_signature = request.headers.get("X-Signature", "")expected_signature = hmac.new( WEBHOOK_SECRET.encode(), raw_payload.encode(), hashlib.sha256 ).hexdigest()if hmac.compare_digest(received_signature, expected_signature): print("Webhook verified successfully!", data) 
+received_signature = request.headers.get("X-Signature", "")
+expected_signature = hmac.new( WEBHOOK_SECRET.encode(), raw_payload.encode(), hashlib.sha256 ).hexdigest()
+if hmac.compare_digest(received_signature, expected_signature):
+	print("Webhook verified successfully!", data) 
 else:
  	print("Invalid signature")
 ```
