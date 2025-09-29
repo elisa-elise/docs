@@ -50,14 +50,7 @@
       },
       {
         "tab": "API reference",
-        "groups": [
-          {
-            "group": "API Documentation",
-            "pages": [
-              "api-reference"
-            ]
-          }
-        ]
+        "openapi": "https://api.eliseai.com/openapi.json"
       }
     ],
     "global": {
