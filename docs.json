@@ -1,14 +1,40 @@
 {
+  "name": "Your API Documentation",
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "favicon": "/favicon.png",
+  "colors": {
+    "primary": "#0D9373",
+    "light": "#07C983",
+    "dark": "#0D9373"
+  },
   "theme": "mint",
   "openapi": "openapi.json",
+  "topbarLinks": [
+    {
+      "name": "Support",
+      "url": "mailto:support@yourcompany.com"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Dashboard",
+    "url": "https://dashboard.yourcompany.com"
+  },
   "navigation": [
     {
       "group": "Getting Started",
-      "pages": ["introduction"]
+      "pages": [
+        "introduction",
+        "quickstart"
+      ]
     },
     {
       "group": "API Reference",
-      "pages": ["api-reference"]
+      "pages": [
+        "api-reference"
+      ]
     }
   ]
 }
