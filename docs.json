@@ -16,6 +16,11 @@
     "examples": {
       "languages": ["curl", "python", "javascript"],
       "defaults": "required"
+    },
+     "mdx": {
+      "auth": {
+        "method": "bearer"
+      }
     }
   },
   "navigation": {
