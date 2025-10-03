@@ -1,42 +1,148 @@
 ---
-title: "Setting up Webhooks"
+title: "Getting Started with EliseAI API"
+description: "Get up and running with the EliseAI API in minutes. This guide will walk you through authentication and making your first API request."
 ---
 
-Webhook events are sent as POST requests to the desired endpoint agreed upon with the EliseAI implementation team. 
+## Prerequisites
 
-Best practice is to handle these asynchronously (i.e. record webhook message, return success response, and then separately handle processing) EliseAI tracks deliverability/success of all webhook events. Webhook events are provided with a signature. 
+Before you begin you'll need:
 
-## Configuration
+- A Bearer token (see Authentication section below)
+- [Property IDs]
+- [some agreement?]
 
-### EliseAI IP Addresses
+## Authentication
 
-Whitelist these IPs if needed:
+The EliseAI API uses Bearer token authentication. All API requests must include your token in the Authorization header.
 
-- 44.235.137.208
-- 44.235.21.125
+### Obtaining Your API Token
 
-### Webhook Signature Verification
+To get your API token, contact your EliseAI account representative or reach out to our support team at [support contact]. Once issued, please store your token securely.
 
-All webhook events include a signature for security. To verify authenticity:
+### Using Your Token
 
-```python
-WEBHOOK_SECRET = <YOUR_WEBHOOK_SECRET>
-raw_payload = request.get_data(as_text=True)
-received_signature = request.headers.get("X-Signature", "")
-expected_signature = hmac.new( WEBHOOK_SECRET.encode(), raw_payload.encode(), hashlib.sha256 ).hexdigest()
-if hmac.compare_digest(received_signature, expected_signature):
-	print("Webhook verified successfully!", data) 
-else:
- 	print("Invalid signature")
+Include your Bearer token in the Authorization header of every API request:
+
+```bash
+Authorization: Bearer YOUR_API_TOKEN
 ```
 
-**Note:** All webhook events are sent with `event_date` as UTC.
+## Making Your First Request
 
-<Card title="Webhook Documentation" icon="book" iconType="solid" href="https://eliseai.mintlify.app/api-reference/prospect/get-prospect" cta="View Documentation">
-  View Webhooks in EliseAI API
-</Card>
+Once you have your token, you can start making requests to the EliseAI API.
 
+### Example: Fetch Prospects
+
+Here's a basic example using cURL:
+
+```bash
+curl -X GET https://api.eliseai.com/v2/properties/12345/units \
+  -H "Authorization: Bearer YOUR_API_TOKEN" \
+  -H "Content-Type: application/json"
+```
+
+Make sure to substitute`12345`for a property_id you've been given access to.
+
+### Example: Python
+
+```python
+import requests
+
+url = "https://api.eliseai.com/v2/properties/12345/units"
+headers = {
+    "Authorization": "Bearer YOUR_API_TOKEN",
+    "Content-Type": "application/json"
+}
+
+response = requests.get(url, headers=headers)
+data = response.json()
+print(data)
+```
+
+### Example: JavaScript (Node.js)
+
+```javascript
+const fetch = require('node-fetch');
+
+const url = 'https://api.eliseai.com/v2/properties/12345/units';
+const headers = {
+  'Authorization': 'Bearer YOUR_API_TOKEN',
+  'Content-Type': 'application/json'
+};
+
+fetch(url, { headers })
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error));
+```
+
+## Response Format
+
+All API responses are returned in JSON format. A successful response will return a 200 status code along with the requested data.
+
+```json
+{
+  "units": [
+    {
+      "id": "string",
+      "property_id": "string",
+      "unit_number": "string",
+      "unit_type": "residential",
+      "status": "vacant",
+      "bedrooms": 0,
+      "bathrooms": 0,
+      "square_feet": 1,
+      "floor": 0,
+      "building": "string",
+      "floor_plan": "string",
+      "market_rent": 0,
+      "available_date": "2025-10-02",
+      "created_at": "2025-10-02T17:04:12.402Z",
+      "updated_at": "2025-10-02T17:04:12.402Z"
+    }
+  ],
+  "pagination": {
+    "total": 156,
+    "limit": 100,
+    "offset": 0
+  }
+}
+```
+
+## Common Status Codes
+
+| 200 OK                        | Request succeeded                        |
+| ----------------------------- | ---------------------------------------- |
+| **200 Bad Request**           | Invalid request parameters               |
+| **401 Unauthorized**          | Missing or invalid authentication token  |
+| **403 Forbidden**             | Valid token but insufficient permissions |
+| **404 Not Found**             | Resource not found                       |
+| **429 Too Many Requests**     | Rate limit exceeded                      |
+| **500 Internal Server Error** | Server error                             |
+
+## Rate Limiting
+
+The EliseAI API does not currently enforce rate limits. However, to ensure optimal performance and prepare for future rate limiting, we strongly recommend implementing request throttling on your end.
+
+**Recommended practices:**
+
+- Implement reasonable delays between requests
+- Use batch operations where available
+- Avoid making unnecessary or redundant API calls
+
+We will be introducing rate limits in the near future. This documentation will be updated with specific limits and headers once implemented.
+
+## Best Practices
+
+- **Keep your token secure** - Never expose your API token in client-side code or public repositories
+- **Handle errors gracefully** - Always check response status codes and handle errors appropriately
+- **Respect rate limits** - Implement exponential backoff when encountering rate limits (future)
+- **Use HTTPS** - All API requests must be made over HTTPS
+
+## Next Steps
+
+Now that you're authenticated and have made your first request, explore our API reference documentation [add link].
 
 <Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
+  **Need help?** Review our [API Reference](https://mintlify.com/docs) or contact support at [api-support@meetelise.com](https://mintlify.com/community)
 </Note>
