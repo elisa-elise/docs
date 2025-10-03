@@ -1,0 +1,416 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Elise API",
+    "description": "EliseAI API documentation",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/v1/prospect/{elise_prospect_id}": {
+      "get": {
+        "tags": ["Prospect"],
+        "summary": "Get Prospect",
+        "description": "Note: Additional fields may be added",
+        "operationId": "get_prospect_v1_prospect__elise_prospect_id__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Elise Prospect Id"
+            },
+            "name": "elise_prospect_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EliseProspect"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "401": {
+            "description": "Not Authorized for this endpoint"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/prospect": {
+      "post": {
+        "tags": ["Prospect"],
+        "summary": "Create Prospect Endpoint",
+        "description": "Note: Additional event types or fields may be added",
+        "operationId": "create_prospect_endpoint_v1_prospect_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProspectRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateProspectResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "401": {
+            "description": "Not Authorized for this endpoint"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.eliseai.com"
+    }
+  ],
+  "security": [
+    {
+      "VendorBearer": []
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "VendorBearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Vendor API Token"
+      }
+    },
+    "schemas": {
+      "EliseProspect": {
+        "properties": {
+          "elise_prospect_id": {
+            "type": "string",
+            "title": "Elise Prospect Id"
+          },
+          "elise_property_id": {
+            "type": "string",
+            "title": "Elise Property Id"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ProspectStatus"
+          },
+          "first_name": {
+            "type": "string",
+            "title": "First Name"
+          },
+          "last_name": {
+            "type": "string",
+            "title": "Last Name"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "phone": {
+            "type": "string",
+            "title": "Phone"
+          },
+          "preferred_layouts": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Preferred Layouts"
+          },
+          "preferred_units": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Preferred Units"
+          },
+          "primary_lead_source": {
+            "type": "string",
+            "title": "Primary Lead Source"
+          },
+          "from_move_in_date": {
+            "type": "string",
+            "format": "date",
+            "title": "From Move In Date"
+          },
+          "to_move_in_date": {
+            "type": "string",
+            "format": "date",
+            "title": "To Move In Date"
+          },
+          "min_lease_length": {
+            "type": "integer",
+            "title": "Min Lease Length"
+          },
+          "max_lease_length": {
+            "type": "integer",
+            "title": "Max Lease Length"
+          },
+          "min_budget": {
+            "type": "integer",
+            "title": "Min Budget"
+          },
+          "max_budget": {
+            "type": "integer",
+            "title": "Max Budget"
+          },
+          "pets": {
+            "items": {
+              "$ref": "#/components/schemas/Pets"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object",
+        "required": ["elise_prospect_id", "elise_property_id"],
+        "title": "EliseProspect"
+      },
+      "CreateProspectRequest": {
+        "properties": {
+          "first_name": {
+            "type": "string",
+            "title": "First Name"
+          },
+          "last_name": {
+            "type": "string",
+            "title": "Last Name"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email",
+            "description": "Valid email address",
+            "example": "john.doe@example.com"
+          },
+          "phone": {
+            "type": "string",
+            "title": "Phone",
+            "description": "Phone number in E.164 format (e.g. +12025550179)",
+            "example": "+12025550179"
+          },
+          "move_in_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Move In Date"
+          },
+          "bedrooms": {
+            "type": "integer",
+            "minimum": 0,
+            "title": "Bedrooms",
+            "description": "Number of bedrooms prospect is interested in",
+            "example": 2
+          },
+          "bathrooms": {
+            "type": "integer",
+            "minimum": 0,
+            "title": "Bathrooms",
+            "description": "Number of bathrooms prospect is interested in",
+            "example": 2
+          },
+          "minimum_budget": {
+            "type": "integer",
+            "minimum": 0,
+            "title": "Minimum Budget",
+            "description": "Minimum monthly rent budget in USD",
+            "example": 1500
+          },
+          "maximum_budget": {
+            "type": "integer",
+            "minimum": 0,
+            "title": "Maximum Budget",
+            "description": "Maximum monthly rent budget in USD",
+            "example": 2500
+          },
+          "min_lease_length": {
+            "type": "integer",
+            "minimum": 0,
+            "title": "Min Lease Length",
+            "description": "Minimum desired lease term in months",
+            "example": 12
+          },
+          "max_lease_length": {
+            "type": "integer",
+            "minimum": 0,
+            "title": "Max Lease Length",
+            "description": "Maximum desired lease term in months",
+            "example": 18
+          },
+          "vendor_prospect_id": {
+            "type": "string",
+            "title": "Vendor Prospect Id",
+            "description": "External vendor prospect IDIf provided, subsequent webhook events will include this ID.Vendor source is attributed to ID from API credentials",
+            "example": "etS123456"
+          },
+          "vendor_source": {
+            "type": "string",
+            "title": "Vendor Source",
+            "description": "Vendor prospect id source.Field can only be set by internal EliseApi user, otherwise it is inferred through API credentials"
+          },
+          "elise_prospect_id": {
+            "type": "string",
+            "title": "Elise Prospect Id",
+            "description": "Unique identifier for the prospect in Elise's system.",
+            "example": "c21b94e2-0280-415d-9d1e-091b547a0061"
+          },
+          "property_id": {
+            "type": "string",
+            "title": "Property Id",
+            "description": "Unique identifier for the property in Elise's system. Required for vendors",
+            "example": "c21b94e2-0280-415d-9d1e-091b547a0061"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source",
+            "description": "The source or channel through which the prospect was acquired. Required for all, but pass-through for PMS and third-party property management companies.",
+            "example": "Zillow"
+          },
+          "external_prospect_id": {
+            "type": "string",
+            "title": "External Prospect Id",
+            "description": "External prospect ID from property management system. Only allowed when request is sent from a PMS or third-party property management company. If provided, subsequent webhook events will include this ID.",
+            "example": "PMS123456"
+          },
+          "external_property_id": {
+            "type": "string",
+            "title": "External Property Id",
+            "description": "External property ID from property management system. Only allowed when request is sent from a PMS or third-party property management company.",
+            "example": "property123"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "[DEPRECATED] Current status of the prospect in the application/leasing process. This should be updated by passing Status events.",
+            "example": "ApplicationStarted"
+          },
+          "events": {
+            "items": {
+              "$ref": "#/components/schemas/Event"
+            },
+            "type": "array",
+            "title": "Events",
+            "description": "List of events (appointments, notes, communications etc.) associated with this prospect creation"
+          }
+        },
+        "type": "object",
+        "title": "CreateProspectRequest"
+      },
+      "CreateProspectResponse": {
+        "properties": {
+          "elise_prospect_id": {
+            "type": "string",
+            "title": "Elise Prospect Id"
+          }
+        },
+        "type": "object",
+        "required": ["elise_prospect_id"],
+        "title": "CreateProspectResponse"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": ["loc", "msg", "type"],
+        "title": "ValidationError"
+      },
+      "ProspectStatus": {
+        "type": "string",
+        "enum": [
+          "Inquiry",
+          "Applicant",
+          "Leased",
+          "Cancelled"
+        ],
+        "title": "ProspectStatus",
+        "description": "An enumeration."
+      },
+      "Pets": {
+        "type": "string",
+        "enum": [
+          "Cats",
+          "Dogs",
+          "UnknownPetIdentity",
+          "NoPets"
+        ],
+        "title": "Pets",
+        "description": "An enumeration."
+      },
+      "Event": {
+        "type": "object",
+        "title": "Event",
+        "description": "Note: Additional event types or fields may be added"
+      }
+    }
+  }
+}
