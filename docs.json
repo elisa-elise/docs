@@ -19,32 +19,13 @@
     }
   },
   "navigation": {
-    "groups": [
-      {
-        "group": "Public Pages",
-        "public": true,
-        "icon": "play",
-        "pages": [
-          "index",
-          "quickstart"
-        ]
-      },
-      {
-        "group": "Private Pages",
-        "public": false,
-        "icon": "pause",
-        "pages": [
-          "development",
-          "api-reference"
-        ]
-      }
-    ],
     "tabs": [
       {
         "tab": "Guides",
         "groups": [
           {
             "group": "Getting started",
+            "public": true,
             "pages": [
               "index",
               "quickstart",
