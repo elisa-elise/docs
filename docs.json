@@ -21,7 +21,7 @@
   "navigation": {
     "groups": [
       {
-        "group": "Public group",
+        "group": "USER",
         "public": true,
         "icon": "play",
         "pages": [
@@ -30,7 +30,7 @@
         ]
       },
       {
-        "group": "Private group",
+        "group": "ADMIN",
         "public": false,
         "icon": "pause",
         "pages": [
