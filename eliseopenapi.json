@@ -1,0 +1,4651 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Elise API",
+    "description": "EliseAI API documentation",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/v1/prospect/{elise_prospect_id}": {
+      "get": {
+        "tags": [
+          "Prospect"
+        ],
+        "summary": "Get Prospect",
+        "description": "Note: Additional fields may be added",
+        "operationId": "get_prospect_v1_prospect__elise_prospect_id__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Elise Prospect Id"
+            },
+            "name": "elise_prospect_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EliseProspect"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "401": {
+            "description": "Not Authorized for this endpoint"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/prospect": {
+      "post": {
+        "tags": [
+          "Prospect"
+        ],
+        "summary": "Create Prospect Endpoint",
+        "description": "Note: Additional event types or fields may be added",
+        "operationId": "create_prospect_endpoint_v1_prospect_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProspectRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateProspectResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "401": {
+            "description": "Not Authorized for this endpoint"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/prospect/vendor_chat": {
+      "post": {
+        "tags": [
+          "Prospect"
+        ],
+        "summary": "Post Vendor Chat",
+        "description": "[BETA] Vendor chat",
+        "operationId": "post_vendor_chat_v1_prospect_vendor_chat_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VendorChatRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "401": {
+            "description": "Not Authorized for this endpoint"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/property/{property_id}/appointments/availability": {
+      "get": {
+        "tags": [
+          "Calendar"
+        ],
+        "summary": "Get Appointment Availability",
+        "operationId": "get_appointment_availability_v1_property__property_id__appointments_availability_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Property Id"
+            },
+            "name": "property_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Start Time"
+            },
+            "name": "start_time",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "title": "End Time"
+            },
+            "name": "end_time",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "items": {
+                "$ref": "#/components/schemas/TourType"
+              },
+              "type": "array"
+            },
+            "name": "tour_types[]",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppointmentAvailability"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "401": {
+            "description": "Not Authorized for this endpoint"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/prospect/{elise_prospect_id}/appointment": {
+      "post": {
+        "tags": [
+          "Calendar"
+        ],
+        "summary": "Book Appointment For Prospect",
+        "description": "Book an appointment for an existing prospect",
+        "operationId": "book_appointment_for_prospect_v1_prospect__elise_prospect_id__appointment_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Elise Prospect Id"
+            },
+            "name": "elise_prospect_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AppointmentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppointmentResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "401": {
+            "description": "Not Authorized for this endpoint"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/prospect/appointment": {
+      "post": {
+        "tags": [
+          "Calendar"
+        ],
+        "summary": "Create Prospect With Appointment",
+        "description": "Create a new prospect with an appointment",
+        "operationId": "create_prospect_with_appointment_v1_prospect_appointment_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProspectAppointmentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateProspectAppointmentResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "401": {
+            "description": "Not Authorized for this endpoint"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/appointment/{appointment_id}": {
+      "delete": {
+        "tags": [
+          "Calendar"
+        ],
+        "summary": "Cancel Appointment",
+        "description": "Cancel an existing appointment",
+        "operationId": "cancel_appointment_v1_appointment__appointment_id__delete",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Appointment Id"
+            },
+            "name": "appointment_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppointmentResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "401": {
+            "description": "Not Authorized for this endpoint"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Calendar"
+        ],
+        "summary": "Update Appointment",
+        "description": "Reschedule appointment or update appointment type",
+        "operationId": "update_appointment_v1_appointment__appointment_id__patch",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Appointment Id"
+            },
+            "name": "appointment_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAppointmentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppointmentResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "401": {
+            "description": "Not Authorized for this endpoint"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/appointment/{appointment_id}/outcome": {
+      "post": {
+        "tags": [
+          "Calendar"
+        ],
+        "summary": "Mark Appointment Outcome",
+        "description": "Mark appointment outcome",
+        "operationId": "mark_appointment_outcome_v1_appointment__appointment_id__outcome_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Appointment Id"
+            },
+            "name": "appointment_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarkAppointmentOutcomeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarkAppointmentOutcomeResult"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "401": {
+            "description": "Not Authorized for this endpoint"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/task": {
+      "get": {
+        "tags": [
+          "Task"
+        ],
+        "summary": "Get Tasks",
+        "operationId": "get_tasks_v1_task_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Property Id"
+            },
+            "name": "property_id",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "title": "Only Open",
+              "default": true
+            },
+            "name": "only_open",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "title": "Limit",
+              "default": 100
+            },
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "title": "Offset",
+              "default": 0
+            },
+            "name": "offset",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Task"
+                  },
+                  "type": "array",
+                  "title": "Response Get Tasks V1 Task Get"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "401": {
+            "description": "Not Authorized for this endpoint"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/property/{property_id}/lead-sources": {
+      "get": {
+        "tags": [
+          "Property"
+        ],
+        "summary": "Get Property Lead Sources",
+        "description": "Get all lead sources for a property",
+        "operationId": "get_property_lead_sources_v1_property__property_id__lead_sources_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Property Id"
+            },
+            "name": "property_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeadSourcesResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "401": {
+            "description": "Not Authorized for this endpoint"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/property/{property_id}/activity": {
+      "get": {
+        "tags": [
+          "Property"
+        ],
+        "summary": "Get Property Activity",
+        "operationId": "get_property_activity_v1_property__property_id__activity_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Property Id"
+            },
+            "name": "property_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Start Date"
+            },
+            "name": "start_date",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "End Date"
+            },
+            "name": "end_date",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "title": "Limit",
+              "default": 100
+            },
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "title": "Offset",
+              "default": 0
+            },
+            "name": "offset",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Activity"
+                  },
+                  "type": "array",
+                  "title": "Response Get Property Activity V1 Property  Property Id  Activity Get"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "401": {
+            "description": "Not Authorized for this endpoint"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/property/{property_id}/residents": {
+      "get": {
+        "tags": [
+          "Property"
+        ],
+        "summary": "Get Property Residents",
+        "operationId": "get_property_residents_v1_property__property_id__residents_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Property Id"
+            },
+            "name": "property_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "title": "Limit",
+              "default": 100
+            },
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "title": "Offset",
+              "default": 0
+            },
+            "name": "offset",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Resident"
+                  },
+                  "type": "array",
+                  "title": "Response Get Property Residents V1 Property  Property Id  Residents Get"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "401": {
+            "description": "Not Authorized for this endpoint"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/property/{property_id}/units/{unit_id}": {
+      "get": {
+        "tags": [
+          "Property"
+        ],
+        "summary": "Get Unit",
+        "description": "Get a unit by ID and lease term",
+        "operationId": "get_unit_v1_property__property_id__units__unit_id__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Property Id"
+            },
+            "name": "property_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Unit Id"
+            },
+            "name": "unit_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "title": "Lease Term"
+            },
+            "name": "lease_term",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "title": "Move In Date"
+            },
+            "name": "move_in_date",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "title": "Include Price",
+              "default": false
+            },
+            "name": "include_price",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "401": {
+            "description": "Not Authorized for this endpoint"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/property/{property_id}/units": {
+      "get": {
+        "tags": [
+          "Property"
+        ],
+        "summary": "Property Units",
+        "operationId": "property_units_v1_property__property_id__units_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Property Id"
+            },
+            "name": "property_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "title": "Include Price",
+              "default": false
+            },
+            "name": "include_price",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Floorplan Name"
+            },
+            "name": "floorplan_name",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "title": "Num Bedrooms"
+            },
+            "name": "num_bedrooms",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "items": {
+                "type": "integer"
+              },
+              "type": "array",
+              "title": "Num Bedrooms List[]"
+            },
+            "name": "num_bedrooms_list[]",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "title": "Move In Date Earliest"
+            },
+            "name": "move_in_date_earliest",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "title": "Move In Date Latest"
+            },
+            "name": "move_in_date_latest",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "title": "Lease Term Min"
+            },
+            "name": "lease_term_min",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "title": "Lease Term Max"
+            },
+            "name": "lease_term_max",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Unit Id"
+            },
+            "name": "unit_id",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "title": "Only Available",
+              "default": true
+            },
+            "name": "only_available",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Unit"
+                  },
+                  "type": "array",
+                  "title": "Response Property Units V1 Property  Property Id  Units Get"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "401": {
+            "description": "Not Authorized for this endpoint"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/property/{property_id}/units/virtual-tour-links": {
+      "post": {
+        "tags": [
+          "Property"
+        ],
+        "summary": "Update Virtual Tour Links",
+        "description": "Update virtual tour links for multiple units in a property",
+        "operationId": "update_virtual_tour_links_v1_property__property_id__units_virtual_tour_links_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Property Id"
+            },
+            "name": "property_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VirtualTourLinksRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VirtualTourLinksResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "401": {
+            "description": "Not Authorized for this endpoint"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/idv/status": {
+      "post": {
+        "tags": [
+          "Identity Verification"
+        ],
+        "summary": "Post Idv Status",
+        "operationId": "post_idv_status_v1_idv_status_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "title": "Body"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "401": {
+            "description": "Not Authorized for this endpoint"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/support": {
+      "get": {
+        "tags": [
+          "support"
+        ],
+        "summary": "Fetch Support Lookup",
+        "operationId": "fetch_support_lookup_v1_support_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "User Email Requesting"
+            },
+            "name": "user_email_requesting",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Community Name"
+            },
+            "name": "community_name",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "401": {
+            "description": "Not Authorized for this endpoint"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/workflows/initiate/{workflow_id}": {
+      "post": {
+        "tags": [
+          "Workflows"
+        ],
+        "summary": "Initiate Workflow",
+        "operationId": "initiate_workflow_v1_workflows_initiate__workflow_id__post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Workflow Id"
+            },
+            "name": "workflow_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "title": "Body"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid parameters"
+          },
+          "401": {
+            "description": "Unauthorized - invalid or missing API key"
+          },
+          "403": {
+            "description": "Forbidden - insufficient permissions"
+          },
+          "404": {
+            "description": "Not found - resource doesn't exist"
+          },
+          "409": {
+            "description": "Conflict - duplicate resource"
+          },
+          "422": {
+            "description": "Unprocessable entity - validation error"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "503": {
+            "description": "Service unavailable - external service failure"
+          }
+        }
+      }
+    }
+  },
+  "webhooks": {
+    "prospect_event": {
+      "post": {
+        "summary": "New Prospect Event",
+        "description": "Whenever we receive information about a prospect, we will post it back to your registered webhook.\n\nWebhooks can be registered at the organization level or the property level.\nPlease reach out to the EliseAI support team to register your webhooks.\n\nEvent Types:\n* **ProspectUpdate:** Posted whenever a prospect is created, or additional information is gathered around a prospect\n* **Handoff:** Posted whenever Leasing Agent intervention is required\n* **ProspectEmailEvent:** Posted whenever Elise emails a lead or a lead emails Elise\n* **ProspectTextEvent:** Posted whenever Elise texts a lead or a lead texts Elise\n* **ProspectVoiceAIEvent:** Posted whenever a lead calls VoiceAI\n* **ProspectOptOutEvent:** Posted whenever a lead opts out of medium(s) of communication.\n* **ProspectOptInEvent:** Posted whenever a lead opts into medium(s) of communication.\n* **ProspectInternalNoteEvent:** Posted whenever a lead is added to a conversation as an internal note.\n* **ProspectWebchatEvent:** Posted whenever a lead chats with Elise via webchat.\n* **ProspectStatusChangeEvent:** Posted whenever a prospect status is changed.\n* **ProspectOwnerUpdateEvent:** Posted whenever a prospect owner is changed.",
+        "operationId": "new_prospect_eventprospect_event_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProspectWebhookEvent"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "task_event": {
+      "post": {
+        "summary": "Task Event Webhook",
+        "description": "Whenever a task is created or closed (resolved), we will post it back to your registered webhook.\n\nWebhooks can be registered at the organization level or the property level.\nPlease reach out to the EliseAI support team to register your webhooks.\n\nCreation events will include: \n* task_id (str): Elise identifier for the task\n* type (str): one of \"TaskCreated\", \"TaskClosed\"\n* task_type (str): describes the type of task that needs to be done such as \"ReplyNeeded\"\n* event_date (datetime): date and time of the event\n* elise_prospect_id (str): Elise identifier for the prospect\n* elise_conversation_id (str): Elise identifier for the conversation\n* elise_property_id (str): Elise identifier for the property\n\nResolutions will _additionally_ include:\n* resolution_type (str): describes how the task was resolved\n* resolution_user_id (str): Elise identifier for the user who resolved the task\n* resolution_user_email (str): email of the user who resolved the task\n* resolution_user_name (str): name of the user who resolved the task",
+        "operationId": "task_event_webhooktask_event_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskWebhookEvent"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "calendar_event": {
+      "post": {
+        "summary": "Calendar Event Webhook",
+        "description": "Whenever a calendar event is created, cancelled, or updated, we will post it back to your registered webhook.\n\nWebhooks can be registered at the organization level or the property level.\nPlease reach out to the EliseAI support team to register your webhooks.\n\nThis is the list of possible update types:\n* **AppointmentScheduled:** Posted whenever a new appointment is scheduled\n* **AppointmentCancelled:** Posted whenever an appointment is cancelled\n* **AppointmentShow:** Posted whenever a prospect shows up for their appointment\n* **AppointmentNoShow:** Posted whenever a prospect doesn't show up for their appointment\n* **AgentUpdated:** Posted whenever the assigned leasing agent for an appointment is changed\n\nCalendar events will include:\n* **event_id:** Unique identifier for the event\n* **type:** The type of event that occurred\n* **event_date:** Date and time of the event\n* **calendar_event_id:** Elise identifier for the calendar event\n* **elise_property_id:** Elise identifier for the property\n* **external_property_id:** External identifier for the property\n* **elise_prospect_id:** Elise identifier for the prospect\n* **external_prospect_id:** External identifier for the prospect\n\nAdditional fields based on the type of event:\n* **AppointmentScheduled:**\n  * **start_time:** The start time of the appointment\n  * **end_time:** The end time of the appointment\n  * **tour_type:** The type of tour\n  * **leasing_agent_email:** The email of the leasing agent\n  * **leasing_agent_app_user_id:** The ID of the leasing agent's app user\n* **AppointmentCancelled:**\n  * **start_time:** The start time of the appointment\n  * **end_time:** The end time of the appointment\n  * **tour_type:** The type of tour\n* **AppointmentShow:**\n  * **show_time:** The time the prospect showed up for their appointment\n  * **start_time:** The start time of the appointment\n  * **end_time:** The end time of the appointment\n  * **tour_type:** The type of tour\n  * **unit_ids:** The IDs of the units that were shown\n  * **unit_numbers:** The numbers of the units that were shown\n* **AppointmentNoShow:**\n  * **no_show_time:** The time the prospect didn't show up for their appointment\n  * **start_time:** The start time of the appointment\n  * **end_time:** The end time of the appointment\n  * **tour_type:** The type of tour\n* **AgentUpdated:**\n  * **old_agent_user_id:** The ID of the old leasing agent\n  * **old_agent_email:** The email of the old leasing agent\n  * **new_agent_user_id:** The ID of the new leasing agent\n  * **new_agent_email:** The email of the new leasing agent\n  * **start_time:** The start time of the appointment\n  * **end_time:** The end time of the appointment\n  * **tour_type:** The type of tour",
+        "operationId": "calendar_event_webhookcalendar_event_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CalendarWebhookEvent"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.eliseai.com"
+    }
+  ],
+  "security": [
+    {
+      "VendorBearer": []
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "OAuth2": {
+        "type": "oauth2",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://meetelise.us.auth0.com/authorize",
+            "tokenUrl": "https://meetelise.us.auth0.com/oauth/token",
+            "scopes": {
+
+            }
+          }
+        }
+      },
+      "VendorBearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Vendor API Token"
+      }
+    },
+    "schemas": {
+      "AppointmentEvent": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "Appointment",
+            "title": "Type",
+            "default": "Appointment"
+          },
+          "event_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Event Date"
+          },
+          "tour_type": {
+            "$ref": "#/components/schemas/TourType"
+          },
+          "appointment_time": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Appointment Time"
+          },
+          "appointment_id": {
+            "type": "string",
+            "title": "Appointment Id"
+          },
+          "is_full_day": {
+            "type": "boolean",
+            "title": "Is Full Day",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "event_date",
+          "tour_type",
+          "appointment_time",
+          "appointment_id"
+        ],
+        "title": "AppointmentEvent"
+      },
+      "Event": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/AppointmentEvent"
+          },
+          {
+            "$ref": "#/components/schemas/ShowEvent"
+          },
+          {
+            "$ref": "#/components/schemas/NoShowEvent"
+          },
+          {
+            "$ref": "#/components/schemas/AppointmentCanceledEvent"
+          },
+          {
+            "$ref": "#/components/schemas/LeadNoteEvent"
+          },
+          {
+            "$ref": "#/components/schemas/EmailEvent"
+          },
+          {
+            "$ref": "#/components/schemas/SmsEvent"
+          },
+          {
+            "$ref": "#/components/schemas/VoiceEvent"
+          },
+          {
+            "$ref": "#/components/schemas/StatusUpdatedEvent"
+          },
+          {
+            "$ref": "#/components/schemas/AgentTakeoverEvent"
+          },
+          {
+            "$ref": "#/components/schemas/EliseReactivatedEvent"
+          },
+          {
+            "$ref": "#/components/schemas/OptOutEvent"
+          },
+          {
+            "$ref": "#/components/schemas/OptInEvent"
+          },
+          {
+            "$ref": "#/components/schemas/WebchatEvent"
+          },
+          {
+            "$ref": "#/components/schemas/SurveyLinkEvent"
+          },
+          {
+            "$ref": "#/components/schemas/IdVerificationStatusEvent"
+          }
+        ],
+        "title": "Event",
+        "description": "Note: Additional event types or fields may be added"
+      },
+      "Responsibility": {
+        "type": "string",
+        "enum": [
+          "Leasing",
+          "Maintenance",
+          "Billing",
+          "Renewals",
+          "EmergencyMaintenance",
+          "Lockouts",
+          "SafetyAndSecurity",
+          "Concierge"
+        ],
+        "title": "Responsibility",
+        "description": "An enumeration."
+      },
+      "ConversationMedium": {
+        "type": "string",
+        "enum": [
+          "EMAIL",
+          "SMS",
+          "VOICE"
+        ],
+        "title": "ConversationMedium",
+        "description": "An enumeration."
+      },
+      "ExternalIdForUnit": {
+        "properties": {
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "id_type": {
+            "type": "string",
+            "title": "Id Type"
+          },
+          "external_id": {
+            "type": "string",
+            "title": "External Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "source",
+          "id_type",
+          "external_id"
+        ],
+        "title": "ExternalIdForUnit"
+      },
+      "ProspectHandoffEvent": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "Handoff",
+            "title": "Type",
+            "default": "Handoff"
+          },
+          "event_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Event Date"
+          },
+          "elise_prospect_id": {
+            "type": "string",
+            "title": "Elise Prospect Id"
+          },
+          "external_prospect_id": {
+            "type": "string",
+            "title": "External Prospect Id"
+          },
+          "elise_property_id": {
+            "type": "string",
+            "title": "Elise Property Id"
+          },
+          "external_property_id": {
+            "type": "string",
+            "title": "External Property Id"
+          },
+          "vendor_prospect_id": {
+            "type": "string",
+            "title": "Vendor Prospect Id"
+          },
+          "conversation_link": {
+            "type": "string",
+            "title": "Conversation Link"
+          },
+          "handoff_type": {
+            "type": "string",
+            "title": "Handoff Type"
+          },
+          "handoff_reason": {
+            "type": "string",
+            "title": "Handoff Reason"
+          },
+          "handoff_description": {
+            "type": "string",
+            "title": "Handoff Description"
+          },
+          "handoff_message": {
+            "type": "string",
+            "title": "Handoff Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "event_date",
+          "elise_property_id",
+          "handoff_type"
+        ],
+        "title": "ProspectHandoffEvent"
+      },
+      "ProspectEmailEvent": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "Email",
+            "title": "Type",
+            "default": "Email"
+          },
+          "event_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Event Date"
+          },
+          "elise_prospect_id": {
+            "type": "string",
+            "title": "Elise Prospect Id"
+          },
+          "external_prospect_id": {
+            "type": "string",
+            "title": "External Prospect Id"
+          },
+          "elise_property_id": {
+            "type": "string",
+            "title": "Elise Property Id"
+          },
+          "external_property_id": {
+            "type": "string",
+            "title": "External Property Id"
+          },
+          "vendor_prospect_id": {
+            "type": "string",
+            "title": "Vendor Prospect Id"
+          },
+          "conversation_link": {
+            "type": "string",
+            "title": "Conversation Link"
+          },
+          "subject": {
+            "type": "string",
+            "title": "Subject"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "to_addresses": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "To Addresses"
+          },
+          "cc_addresses": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Cc Addresses"
+          },
+          "from_address": {
+            "type": "string",
+            "title": "From Address"
+          },
+          "sender": {
+            "type": "string",
+            "title": "Sender"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "event_date",
+          "elise_property_id",
+          "subject",
+          "message",
+          "to_addresses",
+          "cc_addresses",
+          "from_address",
+          "sender"
+        ],
+        "title": "ProspectEmailEvent"
+      },
+      "VendorChatRequest": {
+        "properties": {
+          "sender": {
+            "$ref": "#/components/schemas/VendorChatSender"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "vendor_prospect_id": {
+            "type": "string",
+            "title": "Vendor Prospect Id"
+          },
+          "prospect_id": {
+            "type": "string",
+            "title": "Prospect Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "sender",
+          "message"
+        ],
+        "title": "VendorChatRequest"
+      },
+      "VendorChatSender": {
+        "type": "string",
+        "enum": [
+          "lead",
+          "agent"
+        ],
+        "title": "VendorChatSender",
+        "description": "An enumeration."
+      },
+      "VirtualTourLinksRequest": {
+        "properties": {
+          "virtual_tour_links": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Virtual Tour Links"
+          }
+        },
+        "type": "object",
+        "required": [
+          "virtual_tour_links"
+        ],
+        "title": "VirtualTourLinksRequest",
+        "description": "Request body for updating virtual tour links for multiple units",
+        "example": {
+          "virtual_tour_links": {
+            "123": "https://example.com/virtual-tour-123",
+            "456": "https://example.com/virtual-tour-456"
+          }
+        }
+      },
+      "TaskEventType": {
+        "type": "string",
+        "enum": [
+          "TaskCreated",
+          "TaskClosed"
+        ],
+        "title": "TaskEventType",
+        "description": "An enumeration."
+      },
+      "OptOutEvent": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "OptOut",
+            "title": "Type",
+            "default": "OptOut"
+          },
+          "event_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Event Date"
+          },
+          "mediums": {
+            "items": {
+              "$ref": "#/components/schemas/ConversationMedium"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "event_date",
+          "mediums"
+        ],
+        "title": "OptOutEvent"
+      },
+      "CreateProspectAppointmentResponse": {
+        "properties": {
+          "prospect": {
+            "$ref": "#/components/schemas/CreateProspectResponse"
+          },
+          "appointment": {
+            "$ref": "#/components/schemas/AppointmentResponse"
+          }
+        },
+        "type": "object",
+        "required": [
+          "prospect",
+          "appointment"
+        ],
+        "title": "CreateProspectAppointmentResponse"
+      },
+      "PropertyLeadSource": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "property_id": {
+            "type": "string",
+            "title": "Property Id"
+          },
+          "active": {
+            "type": "boolean",
+            "title": "Active"
+          },
+          "time_inactivated": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Time Inactivated"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "source",
+          "property_id",
+          "active"
+        ],
+        "title": "PropertyLeadSource",
+        "example": {
+          "id": "123",
+          "source": "Apartments.com",
+          "property_id": "247389",
+          "active": true
+        }
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "VoiceEvent": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "Voice",
+            "title": "Type",
+            "default": "Voice"
+          },
+          "event_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Event Date"
+          },
+          "sender": {
+            "type": "string",
+            "title": "Sender"
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "event_date",
+          "sender",
+          "summary"
+        ],
+        "title": "VoiceEvent"
+      },
+      "StatusUpdatedEvent": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "StatusUpdated",
+            "title": "Type",
+            "default": "StatusUpdated"
+          },
+          "event_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Event Date"
+          },
+          "status": {
+            "$ref": "#/components/schemas/EliseAI__elise_api__model__prospect__ProspectStatus"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "event_date",
+          "status"
+        ],
+        "title": "StatusUpdatedEvent"
+      },
+      "SurveyLinkEvent": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "SurveyLink",
+            "title": "Type",
+            "default": "SurveyLink"
+          },
+          "event_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Event Date"
+          },
+          "survey_link": {
+            "type": "string",
+            "title": "Survey Link"
+          },
+          "survey_link_type": {
+            "$ref": "#/components/schemas/SurveyLinkType"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "event_date",
+          "survey_link",
+          "survey_link_type"
+        ],
+        "title": "SurveyLinkEvent"
+      },
+      "CreateProspectForAppointmentRequest": {
+        "properties": {
+          "first_name": {
+            "type": "string",
+            "title": "First Name"
+          },
+          "last_name": {
+            "type": "string",
+            "title": "Last Name"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email",
+            "description": "Valid email address",
+            "example": "john.doe@example.com"
+          },
+          "phone": {
+            "type": "string",
+            "title": "Phone",
+            "description": "Phone number in E.164 format (e.g. +12025550179)",
+            "example": "+12025550179"
+          },
+          "move_in_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Move In Date"
+          },
+          "bedrooms": {
+            "type": "integer",
+            "minimum": 0,
+            "title": "Bedrooms",
+            "description": "Number of bedrooms prospect is interested in",
+            "example": 2
+          },
+          "bathrooms": {
+            "type": "integer",
+            "minimum": 0,
+            "title": "Bathrooms",
+            "description": "Number of bathrooms prospect is interested in",
+            "example": 2
+          },
+          "minimum_budget": {
+            "type": "integer",
+            "minimum": 0,
+            "title": "Minimum Budget",
+            "description": "Minimum monthly rent budget in USD",
+            "example": 1500
+          },
+          "maximum_budget": {
+            "type": "integer",
+            "minimum": 0,
+            "title": "Maximum Budget",
+            "description": "Maximum monthly rent budget in USD",
+            "example": 2500
+          },
+          "min_lease_length": {
+            "type": "integer",
+            "minimum": 0,
+            "title": "Min Lease Length",
+            "description": "Minimum desired lease term in months",
+            "example": 12
+          },
+          "max_lease_length": {
+            "type": "integer",
+            "minimum": 0,
+            "title": "Max Lease Length",
+            "description": "Maximum desired lease term in months",
+            "example": 18
+          },
+          "vendor_prospect_id": {
+            "type": "string",
+            "title": "Vendor Prospect Id",
+            "description": "External vendor prospect IDIf provided, subsequent webhook events will include this ID.Vendor source is attributed to ID from API credentials",
+            "example": "etS123456"
+          },
+          "vendor_source": {
+            "type": "string",
+            "title": "Vendor Source",
+            "description": "Vendor prospect id source.Field can only be set by internal EliseApi user, otherwise it is inferred through API credentials"
+          },
+          "property_id": {
+            "type": "string",
+            "title": "Property Id"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          }
+        },
+        "type": "object",
+        "required": [
+          "property_id",
+          "source"
+        ],
+        "title": "CreateProspectForAppointmentRequest"
+      },
+      "ProspectTextEvent": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "Text",
+            "title": "Type",
+            "default": "Text"
+          },
+          "event_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Event Date"
+          },
+          "elise_prospect_id": {
+            "type": "string",
+            "title": "Elise Prospect Id"
+          },
+          "external_prospect_id": {
+            "type": "string",
+            "title": "External Prospect Id"
+          },
+          "elise_property_id": {
+            "type": "string",
+            "title": "Elise Property Id"
+          },
+          "external_property_id": {
+            "type": "string",
+            "title": "External Property Id"
+          },
+          "vendor_prospect_id": {
+            "type": "string",
+            "title": "Vendor Prospect Id"
+          },
+          "conversation_link": {
+            "type": "string",
+            "title": "Conversation Link"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "to_phone_number": {
+            "type": "string",
+            "title": "To Phone Number"
+          },
+          "from_phone_number": {
+            "type": "string",
+            "title": "From Phone Number"
+          },
+          "sender": {
+            "type": "string",
+            "title": "Sender"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "event_date",
+          "elise_property_id",
+          "message",
+          "to_phone_number",
+          "from_phone_number",
+          "sender"
+        ],
+        "title": "ProspectTextEvent"
+      },
+      "NoShowEvent": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "NoShow",
+            "title": "Type",
+            "default": "NoShow"
+          },
+          "event_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Event Date"
+          },
+          "appointment_id": {
+            "type": "string",
+            "title": "Appointment Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "event_date",
+          "appointment_id"
+        ],
+        "title": "NoShowEvent"
+      },
+      "CreateProspectAppointmentRequest": {
+        "properties": {
+          "prospect": {
+            "$ref": "#/components/schemas/CreateProspectForAppointmentRequest"
+          },
+          "appointment": {
+            "$ref": "#/components/schemas/AppointmentRequest"
+          }
+        },
+        "type": "object",
+        "required": [
+          "prospect",
+          "appointment"
+        ],
+        "title": "CreateProspectAppointmentRequest"
+      },
+      "EmailEvent": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "Email",
+            "title": "Type",
+            "default": "Email"
+          },
+          "event_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Event Date"
+          },
+          "sender": {
+            "type": "string",
+            "title": "Sender"
+          },
+          "subject": {
+            "type": "string",
+            "title": "Subject"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "event_date",
+          "sender",
+          "subject",
+          "message"
+        ],
+        "title": "EmailEvent"
+      },
+      "AppointmentOutcome": {
+        "type": "string",
+        "enum": [
+          "NoShow",
+          "Show"
+        ],
+        "title": "AppointmentOutcome",
+        "description": "An enumeration."
+      },
+      "IdVerificationProvider": {
+        "type": "string",
+        "enum": [
+          "prospect"
+        ],
+        "title": "IdVerificationProvider",
+        "description": "An enumeration."
+      },
+      "MarkAppointmentOutcomeRequest": {
+        "properties": {
+          "outcome": {
+            "$ref": "#/components/schemas/AppointmentOutcome"
+          },
+          "outcome_time": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Outcome Time"
+          },
+          "unit_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Unit Ids",
+            "description": "Elise-specific unit IDs"
+          }
+        },
+        "type": "object",
+        "required": [
+          "outcome",
+          "outcome_time"
+        ],
+        "title": "MarkAppointmentOutcomeRequest"
+      },
+      "EliseAI__prospects__model__types__ProspectStatus": {
+        "type": "string",
+        "enum": [
+          "Inquiry",
+          "Applicant",
+          "Leased",
+          "Cancelled"
+        ],
+        "title": "ProspectStatus",
+        "description": "An enumeration."
+      },
+      "LeadNoteEvent": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "LeadNote",
+            "title": "Type",
+            "default": "LeadNote"
+          },
+          "event_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Event Date"
+          },
+          "note": {
+            "type": "string",
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "event_date",
+          "note"
+        ],
+        "title": "LeadNoteEvent"
+      },
+      "ProspectStatusChangeEvent": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "StatusChange",
+            "title": "Type",
+            "default": "StatusChange"
+          },
+          "event_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Event Date"
+          },
+          "elise_prospect_id": {
+            "type": "string",
+            "title": "Elise Prospect Id"
+          },
+          "external_prospect_id": {
+            "type": "string",
+            "title": "External Prospect Id"
+          },
+          "elise_property_id": {
+            "type": "string",
+            "title": "Elise Property Id"
+          },
+          "external_property_id": {
+            "type": "string",
+            "title": "External Property Id"
+          },
+          "vendor_prospect_id": {
+            "type": "string",
+            "title": "Vendor Prospect Id"
+          },
+          "conversation_link": {
+            "type": "string",
+            "title": "Conversation Link"
+          },
+          "status": {
+            "$ref": "#/components/schemas/EliseAI__prospects__model__types__ProspectStatus"
+          },
+          "cancellation_reason": {
+            "type": "string",
+            "title": "Cancellation Reason"
+          },
+          "cancellation_source": {
+            "type": "string",
+            "title": "Cancellation Source"
+          },
+          "cancellation_user_id": {
+            "type": "string",
+            "title": "Cancellation User Id"
+          },
+          "cancellation_time": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Cancellation Time"
+          },
+          "cancellation_notes": {
+            "type": "string",
+            "title": "Cancellation Notes"
+          },
+          "application_started_time": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Application Started Time"
+          },
+          "application_completed_time": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Application Completed Time"
+          },
+          "application_approved_time": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Application Approved Time"
+          },
+          "lease_started_time": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Lease Started Time"
+          },
+          "lease_completed_time": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Lease Completed Time"
+          },
+          "lease_approved_time": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Lease Approved Time"
+          },
+          "leased_time": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Leased Time"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "event_date",
+          "elise_property_id",
+          "status"
+        ],
+        "title": "ProspectStatusChangeEvent"
+      },
+      "IdVerificationStatusEvent": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "IdVerificationStatus",
+            "title": "Type",
+            "default": "IdVerificationStatus"
+          },
+          "event_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Event Date"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProspectVerificationStatus"
+              }
+            ],
+            "description": "The verification status result",
+            "example": "SUCCESSFUL"
+          },
+          "provider": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IdVerificationProvider"
+              }
+            ],
+            "description": "The ID verification provider that performed the verification",
+            "example": "checkpoint"
+          },
+          "expiration_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Expiration Date",
+            "description": "When the verification expires (if applicable)",
+            "example": "2025-12-31T23:59:59Z"
+          },
+          "verification_id": {
+            "type": "string",
+            "title": "Verification Id",
+            "description": "External verification ID from the provider",
+            "example": "chk_12345abcde"
+          },
+          "metadata": {
+            "type": "object",
+            "title": "Metadata",
+            "description": "Provider-specific metadata and additional verification details"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "event_date",
+          "status",
+          "provider"
+        ],
+        "title": "IdVerificationStatusEvent"
+      },
+      "ProspectInternalNoteEvent": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "InternalNote",
+            "title": "Type",
+            "default": "InternalNote"
+          },
+          "event_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Event Date"
+          },
+          "elise_prospect_id": {
+            "type": "string",
+            "title": "Elise Prospect Id"
+          },
+          "external_prospect_id": {
+            "type": "string",
+            "title": "External Prospect Id"
+          },
+          "elise_property_id": {
+            "type": "string",
+            "title": "Elise Property Id"
+          },
+          "external_property_id": {
+            "type": "string",
+            "title": "External Property Id"
+          },
+          "vendor_prospect_id": {
+            "type": "string",
+            "title": "Vendor Prospect Id"
+          },
+          "conversation_link": {
+            "type": "string",
+            "title": "Conversation Link"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "sender": {
+            "type": "string",
+            "title": "Sender"
+          },
+          "mentioned_users": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Mentioned Users"
+          },
+          "mentioned_team": {
+            "type": "integer",
+            "title": "Mentioned Team"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "event_date",
+          "elise_property_id",
+          "message"
+        ],
+        "title": "ProspectInternalNoteEvent"
+      },
+      "Task": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "task_type": {
+            "$ref": "#/components/schemas/TaskType"
+          },
+          "trigger_time": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Trigger Time"
+          },
+          "trigger_event_id": {
+            "type": "string",
+            "title": "Trigger Event Id"
+          },
+          "resolution_user_email": {
+            "type": "string",
+            "title": "Resolution User Email"
+          },
+          "resolution_time": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Resolution Time"
+          },
+          "resolution_type": {
+            "$ref": "#/components/schemas/ResolutionType"
+          },
+          "responsibilities": {
+            "items": {
+              "$ref": "#/components/schemas/Responsibility"
+            },
+            "type": "array"
+          },
+          "prospect_id": {
+            "type": "string",
+            "title": "Prospect Id"
+          },
+          "resident_id": {
+            "type": "string",
+            "title": "Resident Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "task_type",
+          "trigger_time",
+          "trigger_event_id"
+        ],
+        "title": "Task"
+      },
+      "ProspectOptOutEvent": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "OptOut",
+            "title": "Type",
+            "default": "OptOut"
+          },
+          "event_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Event Date"
+          },
+          "elise_prospect_id": {
+            "type": "string",
+            "title": "Elise Prospect Id"
+          },
+          "external_prospect_id": {
+            "type": "string",
+            "title": "External Prospect Id"
+          },
+          "elise_property_id": {
+            "type": "string",
+            "title": "Elise Property Id"
+          },
+          "external_property_id": {
+            "type": "string",
+            "title": "External Property Id"
+          },
+          "vendor_prospect_id": {
+            "type": "string",
+            "title": "Vendor Prospect Id"
+          },
+          "conversation_link": {
+            "type": "string",
+            "title": "Conversation Link"
+          },
+          "mediums": {
+            "items": {
+              "$ref": "#/components/schemas/Medium"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "event_date",
+          "elise_property_id",
+          "mediums"
+        ],
+        "title": "ProspectOptOutEvent"
+      },
+      "ResolutionType": {
+        "type": "string",
+        "enum": [
+          "Replied",
+          "Ignored",
+          "Called",
+          "Accepted",
+          "Other"
+        ],
+        "title": "ResolutionType",
+        "description": "An enumeration."
+      },
+      "PriceMatrix": {
+        "properties": {
+          "prices": {
+            "items": {
+              "$ref": "#/components/schemas/PriceMatrixContent"
+            },
+            "type": "array",
+            "title": "Prices"
+          }
+        },
+        "type": "object",
+        "required": [
+          "prices"
+        ],
+        "title": "PriceMatrix"
+      },
+      "Pets": {
+        "type": "string",
+        "enum": [
+          "Cats",
+          "Dogs",
+          "UnknownPetIdentity",
+          "NoPets"
+        ],
+        "title": "Pets",
+        "description": "An enumeration."
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "ProspectWebchatEvent": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "Webchat",
+            "title": "Type",
+            "default": "Webchat"
+          },
+          "event_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Event Date"
+          },
+          "elise_prospect_id": {
+            "type": "string",
+            "title": "Elise Prospect Id"
+          },
+          "external_prospect_id": {
+            "type": "string",
+            "title": "External Prospect Id"
+          },
+          "elise_property_id": {
+            "type": "string",
+            "title": "Elise Property Id"
+          },
+          "external_property_id": {
+            "type": "string",
+            "title": "External Property Id"
+          },
+          "vendor_prospect_id": {
+            "type": "string",
+            "title": "Vendor Prospect Id"
+          },
+          "conversation_link": {
+            "type": "string",
+            "title": "Conversation Link"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "sender": {
+            "type": "string",
+            "title": "Sender"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "event_date",
+          "elise_property_id",
+          "message",
+          "sender"
+        ],
+        "title": "ProspectWebchatEvent"
+      },
+      "CalendarAppointmentScheduledEvent": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "AppointmentScheduled",
+            "title": "Type",
+            "default": "AppointmentScheduled"
+          },
+          "event_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Event Date"
+          },
+          "calendar_event_id": {
+            "type": "integer",
+            "title": "Calendar Event Id"
+          },
+          "elise_property_id": {
+            "type": "string",
+            "title": "Elise Property Id"
+          },
+          "external_property_id": {
+            "type": "string",
+            "title": "External Property Id"
+          },
+          "elise_prospect_id": {
+            "type": "string",
+            "title": "Elise Prospect Id"
+          },
+          "external_prospect_id": {
+            "type": "string",
+            "title": "External Prospect Id"
+          },
+          "conversation_link": {
+            "type": "string",
+            "title": "Conversation Link"
+          },
+          "start_time": {
+            "type": "string",
+            "title": "Start Time"
+          },
+          "end_time": {
+            "type": "string",
+            "title": "End Time"
+          },
+          "tour_type": {
+            "type": "string",
+            "title": "Tour Type"
+          },
+          "leasing_agent_app_user_id": {
+            "type": "string",
+            "title": "Leasing Agent App User Id"
+          },
+          "leasing_agent_email": {
+            "type": "string",
+            "title": "Leasing Agent Email"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "event_date",
+          "calendar_event_id",
+          "elise_property_id",
+          "start_time",
+          "end_time",
+          "tour_type"
+        ],
+        "title": "CalendarAppointmentScheduledEvent"
+      },
+      "TourType": {
+        "type": "string",
+        "enum": [
+          "sgt",
+          "guided",
+          "virtual"
+        ],
+        "title": "TourType",
+        "description": "An enumeration."
+      },
+      "Medium": {
+        "type": "string",
+        "enum": [
+          "EMAIL",
+          "SMS",
+          "VOICE",
+          "CHAT"
+        ],
+        "title": "Medium",
+        "description": "An enumeration."
+      },
+      "UpdateAppointmentRequest": {
+        "properties": {
+          "tour_type": {
+            "$ref": "#/components/schemas/TourType"
+          },
+          "appointment_time": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Appointment Time"
+          }
+        },
+        "type": "object",
+        "title": "UpdateAppointmentRequest"
+      },
+      "EliseProspect": {
+        "properties": {
+          "elise_prospect_id": {
+            "type": "string",
+            "title": "Elise Prospect Id"
+          },
+          "elise_property_id": {
+            "type": "string",
+            "title": "Elise Property Id"
+          },
+          "status": {
+            "$ref": "#/components/schemas/EliseAI__prospects__model__types__ProspectStatus"
+          },
+          "first_name": {
+            "type": "string",
+            "title": "First Name"
+          },
+          "last_name": {
+            "type": "string",
+            "title": "Last Name"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "phone": {
+            "type": "string",
+            "title": "Phone"
+          },
+          "preferred_layouts": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Preferred Layouts"
+          },
+          "preferred_units": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Preferred Units"
+          },
+          "primary_lead_source": {
+            "type": "string",
+            "title": "Primary Lead Source"
+          },
+          "from_move_in_date": {
+            "type": "string",
+            "format": "date",
+            "title": "From Move In Date"
+          },
+          "to_move_in_date": {
+            "type": "string",
+            "format": "date",
+            "title": "To Move In Date"
+          },
+          "min_lease_length": {
+            "type": "integer",
+            "title": "Min Lease Length"
+          },
+          "max_lease_length": {
+            "type": "integer",
+            "title": "Max Lease Length"
+          },
+          "min_budget": {
+            "type": "integer",
+            "title": "Min Budget"
+          },
+          "max_budget": {
+            "type": "integer",
+            "title": "Max Budget"
+          },
+          "pets": {
+            "items": {
+              "$ref": "#/components/schemas/Pets"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object",
+        "required": [
+          "elise_prospect_id",
+          "elise_property_id"
+        ],
+        "title": "EliseProspect"
+      },
+      "CalendarWebhookEvent": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/CalendarAppointmentScheduledEvent"
+          },
+          {
+            "$ref": "#/components/schemas/CalendarAppointmentCancelledEvent"
+          },
+          {
+            "$ref": "#/components/schemas/CalendarAppointmentShowEvent"
+          },
+          {
+            "$ref": "#/components/schemas/CalendarAppointmentNoShowEvent"
+          },
+          {
+            "$ref": "#/components/schemas/CalendarAgentUpdatedEvent"
+          }
+        ],
+        "title": "CalendarWebhookEvent"
+      },
+      "Unit": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "unit_number": {
+            "type": "string",
+            "title": "Unit Number"
+          },
+          "number_of_bedrooms": {
+            "type": "integer",
+            "title": "Number Of Bedrooms"
+          },
+          "number_of_bathrooms": {
+            "type": "number",
+            "title": "Number Of Bathrooms"
+          },
+          "square_footage": {
+            "type": "integer",
+            "title": "Square Footage"
+          },
+          "floor": {
+            "type": "integer",
+            "title": "Floor"
+          },
+          "floorplan_name": {
+            "type": "string",
+            "title": "Floorplan Name"
+          },
+          "floorplan_url": {
+            "type": "string",
+            "title": "Floorplan Url"
+          },
+          "availability_stage": {
+            "type": "string",
+            "title": "Availability Stage"
+          },
+          "price_matrix": {
+            "$ref": "#/components/schemas/PriceMatrix"
+          },
+          "virtual_tour_link": {
+            "type": "string",
+            "title": "Virtual Tour Link"
+          },
+          "external_ids": {
+            "items": {
+              "$ref": "#/components/schemas/ExternalIdForUnit"
+            },
+            "type": "array",
+            "title": "External Ids"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "unit_number",
+          "number_of_bedrooms",
+          "number_of_bathrooms",
+          "availability_stage"
+        ],
+        "title": "Unit"
+      },
+      "CalendarAgentUpdatedEvent": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "AgentUpdated",
+            "title": "Type",
+            "default": "AgentUpdated"
+          },
+          "event_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Event Date"
+          },
+          "calendar_event_id": {
+            "type": "integer",
+            "title": "Calendar Event Id"
+          },
+          "elise_property_id": {
+            "type": "string",
+            "title": "Elise Property Id"
+          },
+          "external_property_id": {
+            "type": "string",
+            "title": "External Property Id"
+          },
+          "elise_prospect_id": {
+            "type": "string",
+            "title": "Elise Prospect Id"
+          },
+          "external_prospect_id": {
+            "type": "string",
+            "title": "External Prospect Id"
+          },
+          "conversation_link": {
+            "type": "string",
+            "title": "Conversation Link"
+          },
+          "old_agent_user_id": {
+            "type": "string",
+            "title": "Old Agent User Id"
+          },
+          "old_agent_email": {
+            "type": "string",
+            "title": "Old Agent Email"
+          },
+          "new_agent_user_id": {
+            "type": "string",
+            "title": "New Agent User Id"
+          },
+          "new_agent_email": {
+            "type": "string",
+            "title": "New Agent Email"
+          },
+          "start_time": {
+            "type": "string",
+            "title": "Start Time"
+          },
+          "end_time": {
+            "type": "string",
+            "title": "End Time"
+          },
+          "tour_type": {
+            "type": "string",
+            "title": "Tour Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "event_date",
+          "calendar_event_id",
+          "elise_property_id",
+          "start_time",
+          "end_time",
+          "tour_type"
+        ],
+        "title": "CalendarAgentUpdatedEvent"
+      },
+      "AppointmentResponse": {
+        "properties": {
+          "appointment_id": {
+            "type": "string",
+            "title": "Appointment Id"
+          },
+          "tour_type": {
+            "$ref": "#/components/schemas/TourType"
+          },
+          "appointment_time": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Appointment Time"
+          },
+          "status": {
+            "$ref": "#/components/schemas/AppointmentStatus"
+          }
+        },
+        "type": "object",
+        "required": [
+          "appointment_id",
+          "tour_type",
+          "appointment_time",
+          "status"
+        ],
+        "title": "AppointmentResponse"
+      },
+      "SurveyLinkType": {
+        "type": "string",
+        "enum": [
+          "PostTourSurvey"
+        ],
+        "title": "SurveyLinkType",
+        "description": "An enumeration."
+      },
+      "TourTypeAvailability": {
+        "properties": {
+          "available_tour_start_times": {
+            "items": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "type": "array",
+            "title": "Available Tour Start Times"
+          },
+          "tour_duration_minutes": {
+            "type": "integer",
+            "title": "Tour Duration Minutes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "available_tour_start_times"
+        ],
+        "title": "TourTypeAvailability",
+        "example": {
+          "available_tour_start_times": [
+            "2024-02-01T09:00:00-08:00",
+            "2024-02-01T10:30:00-08:00",
+            "2024-02-02T09:00:00-08:00",
+            "2024-02-02T10:30:00-08:00"
+          ],
+          "tour_duration_minutes": 30
+        }
+      },
+      "OptInEvent": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "OptIn",
+            "title": "Type",
+            "default": "OptIn"
+          },
+          "event_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Event Date"
+          },
+          "mediums": {
+            "items": {
+              "$ref": "#/components/schemas/ConversationMedium"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "event_date",
+          "mediums"
+        ],
+        "title": "OptInEvent"
+      },
+      "ShowEvent": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "Show",
+            "title": "Type",
+            "default": "Show"
+          },
+          "event_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Event Date"
+          },
+          "appointment_id": {
+            "type": "string",
+            "title": "Appointment Id"
+          },
+          "access_code": {
+            "type": "string",
+            "title": "Access Code"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "event_date"
+        ],
+        "title": "ShowEvent"
+      },
+      "SmsEvent": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "Sms",
+            "title": "Type",
+            "default": "Sms"
+          },
+          "event_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Event Date"
+          },
+          "sender": {
+            "type": "string",
+            "title": "Sender"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "event_date",
+          "sender",
+          "message"
+        ],
+        "title": "SmsEvent"
+      },
+      "TaskWebhookEvent": {
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "title": "Task Id"
+          },
+          "type": {
+            "$ref": "#/components/schemas/TaskEventType"
+          },
+          "task_type": {
+            "type": "string",
+            "title": "Task Type"
+          },
+          "event_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Event Date"
+          },
+          "elise_prospect_id": {
+            "type": "string",
+            "title": "Elise Prospect Id"
+          },
+          "elise_conversation_id": {
+            "type": "string",
+            "title": "Elise Conversation Id"
+          },
+          "elise_property_id": {
+            "type": "string",
+            "title": "Elise Property Id"
+          },
+          "elise_resident_id": {
+            "type": "string",
+            "title": "Elise Resident Id"
+          },
+          "external_prospect_id": {
+            "type": "string",
+            "title": "External Prospect Id"
+          },
+          "external_property_id": {
+            "type": "string",
+            "title": "External Property Id"
+          },
+          "external_resident_id": {
+            "type": "string",
+            "title": "External Resident Id"
+          },
+          "external_lease_id": {
+            "type": "string",
+            "title": "External Lease Id"
+          },
+          "conversation_link": {
+            "type": "string",
+            "title": "Conversation Link"
+          },
+          "resolution_type": {
+            "type": "string",
+            "title": "Resolution Type"
+          },
+          "resolution_user_id": {
+            "type": "string",
+            "title": "Resolution User Id"
+          },
+          "resolution_user_email": {
+            "type": "string",
+            "title": "Resolution User Email"
+          },
+          "resolution_user_name": {
+            "type": "string",
+            "title": "Resolution User Name"
+          },
+          "domain": {
+            "type": "string",
+            "title": "Domain"
+          }
+        },
+        "type": "object",
+        "required": [
+          "task_id",
+          "type",
+          "task_type",
+          "event_date",
+          "elise_property_id"
+        ],
+        "title": "TaskWebhookEvent"
+      },
+      "ProspectWebhookEvent": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/ProspectUpdateWebhookEvent"
+          },
+          {
+            "$ref": "#/components/schemas/ProspectHandoffEvent"
+          },
+          {
+            "$ref": "#/components/schemas/ProspectEmailEvent"
+          },
+          {
+            "$ref": "#/components/schemas/ProspectTextEvent"
+          },
+          {
+            "$ref": "#/components/schemas/ProspectVoiceAIEvent"
+          },
+          {
+            "$ref": "#/components/schemas/ProspectOptOutEvent"
+          },
+          {
+            "$ref": "#/components/schemas/ProspectOptInEvent"
+          },
+          {
+            "$ref": "#/components/schemas/ProspectWebchatEvent"
+          },
+          {
+            "$ref": "#/components/schemas/ProspectInternalNoteEvent"
+          },
+          {
+            "$ref": "#/components/schemas/ProspectStatusChangeEvent"
+          },
+          {
+            "$ref": "#/components/schemas/ProspectOwnerUpdateEvent"
+          }
+        ],
+        "title": "ProspectWebhookEvent"
+      },
+      "VirtualTourLinksResponse": {
+        "properties": {
+          "virtual_tour_links": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Virtual Tour Links"
+          }
+        },
+        "type": "object",
+        "required": [
+          "virtual_tour_links"
+        ],
+        "title": "VirtualTourLinksResponse",
+        "description": "Response for virtual tour links update"
+      },
+      "AgentTakeoverEvent": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "AgentTakeover",
+            "title": "Type",
+            "default": "AgentTakeover"
+          },
+          "event_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Event Date"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "event_date"
+        ],
+        "title": "AgentTakeoverEvent"
+      },
+      "WebchatEvent": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "Webchat",
+            "title": "Type",
+            "default": "Webchat"
+          },
+          "event_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Event Date"
+          },
+          "sender": {
+            "type": "string",
+            "title": "Sender"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "event_date",
+          "sender",
+          "message"
+        ],
+        "title": "WebchatEvent"
+      },
+      "LeadSourcesResponse": {
+        "properties": {
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/PropertyLeadSource"
+            },
+            "type": "array",
+            "title": "Sources"
+          }
+        },
+        "type": "object",
+        "required": [
+          "sources"
+        ],
+        "title": "LeadSourcesResponse"
+      },
+      "ProspectOwnerUpdateEvent": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "OwnerUpdate",
+            "title": "Type",
+            "default": "OwnerUpdate"
+          },
+          "event_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Event Date"
+          },
+          "elise_prospect_id": {
+            "type": "string",
+            "title": "Elise Prospect Id"
+          },
+          "external_prospect_id": {
+            "type": "string",
+            "title": "External Prospect Id"
+          },
+          "elise_property_id": {
+            "type": "string",
+            "title": "Elise Property Id"
+          },
+          "external_property_id": {
+            "type": "string",
+            "title": "External Property Id"
+          },
+          "vendor_prospect_id": {
+            "type": "string",
+            "title": "Vendor Prospect Id"
+          },
+          "conversation_link": {
+            "type": "string",
+            "title": "Conversation Link"
+          },
+          "previous_elise_prospect_owner_id": {
+            "type": "string",
+            "title": "Previous Elise Prospect Owner Id"
+          },
+          "new_elise_prospect_owner_id": {
+            "type": "string",
+            "title": "New Elise Prospect Owner Id"
+          },
+          "previous_elise_prospect_owner_email": {
+            "type": "string",
+            "title": "Previous Elise Prospect Owner Email"
+          },
+          "new_elise_prospect_owner_email": {
+            "type": "string",
+            "title": "New Elise Prospect Owner Email"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "event_date",
+          "elise_property_id"
+        ],
+        "title": "ProspectOwnerUpdateEvent"
+      },
+      "PhoneNumberType": {
+        "type": "string",
+        "enum": [
+          "CELL",
+          "HOME",
+          "WORK",
+          "FAX",
+          "OTHER"
+        ],
+        "title": "PhoneNumberType",
+        "description": "Phone number types"
+      },
+      "CalendarAppointmentShowEvent": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "AppointmentShow",
+            "title": "Type",
+            "default": "AppointmentShow"
+          },
+          "event_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Event Date"
+          },
+          "calendar_event_id": {
+            "type": "integer",
+            "title": "Calendar Event Id"
+          },
+          "elise_property_id": {
+            "type": "string",
+            "title": "Elise Property Id"
+          },
+          "external_property_id": {
+            "type": "string",
+            "title": "External Property Id"
+          },
+          "elise_prospect_id": {
+            "type": "string",
+            "title": "Elise Prospect Id"
+          },
+          "external_prospect_id": {
+            "type": "string",
+            "title": "External Prospect Id"
+          },
+          "conversation_link": {
+            "type": "string",
+            "title": "Conversation Link"
+          },
+          "show_time": {
+            "type": "string",
+            "title": "Show Time"
+          },
+          "start_time": {
+            "type": "string",
+            "title": "Start Time"
+          },
+          "end_time": {
+            "type": "string",
+            "title": "End Time"
+          },
+          "tour_type": {
+            "type": "string",
+            "title": "Tour Type"
+          },
+          "unit_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Unit Ids"
+          },
+          "unit_numbers": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Unit Numbers"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "event_date",
+          "calendar_event_id",
+          "elise_property_id",
+          "show_time",
+          "start_time",
+          "end_time",
+          "tour_type"
+        ],
+        "title": "CalendarAppointmentShowEvent"
+      },
+      "TaskType": {
+        "type": "string",
+        "enum": [
+          "CollectionsEscalationDay",
+          "EvictionRisk",
+          "NeedsReply",
+          "InformationNeeded",
+          "MissedCall",
+          "FormerResidentDeactivated",
+          "CallBack",
+          "NoticeToVacate",
+          "LeaseGeneration",
+          "OptOut",
+          "ReminderTask",
+          "MentionTask",
+          "ToDoTask",
+          "TourFollowUpTask",
+          "ProactiveLeadActionTask",
+          "GenerateLeaseRenewalTask",
+          "ConfirmGeneratedLease",
+          "CounterSignLease",
+          "ApplicationReviewTask",
+          "EvictionNoticeGeneration",
+          "EvictionNoticeGenerationV2",
+          "SignBeforeServingNotice",
+          "SignBeforeServingNoticeV2",
+          "ServeEvictionNotice",
+          "ServeEvictionNoticeV2",
+          "EvictionAccountStatusUpdate",
+          "GenerateLeaseTask",
+          "UtilitiesQuestion",
+          "DataUploadTask",
+          "ResmanRecurringChargeTask",
+          "AigtLocksKeys",
+          "SetTurnCompletedTask",
+          "PandadocCounterSignLease",
+          "AgentActionNeeded",
+          "ExpiredNotice"
+        ],
+        "title": "TaskType",
+        "description": "An enumeration."
+      },
+      "ProspectUpdateWebhookEvent": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "ProspectUpdate",
+            "title": "Type",
+            "default": "ProspectUpdate"
+          },
+          "event_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Event Date"
+          },
+          "elise_prospect_id": {
+            "type": "string",
+            "title": "Elise Prospect Id"
+          },
+          "external_prospect_id": {
+            "type": "string",
+            "title": "External Prospect Id"
+          },
+          "elise_property_id": {
+            "type": "string",
+            "title": "Elise Property Id"
+          },
+          "external_property_id": {
+            "type": "string",
+            "title": "External Property Id"
+          },
+          "vendor_prospect_id": {
+            "type": "string",
+            "title": "Vendor Prospect Id"
+          },
+          "conversation_link": {
+            "type": "string",
+            "title": "Conversation Link"
+          },
+          "first_name": {
+            "type": "string",
+            "title": "First Name"
+          },
+          "last_name": {
+            "type": "string",
+            "title": "Last Name"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "phone": {
+            "type": "string",
+            "title": "Phone"
+          },
+          "earliest_move_in": {
+            "type": "string",
+            "format": "date",
+            "title": "Earliest Move In"
+          },
+          "latest_move_in": {
+            "type": "string",
+            "format": "date",
+            "title": "Latest Move In"
+          },
+          "min_lease_length": {
+            "type": "integer",
+            "title": "Min Lease Length"
+          },
+          "max_lease_length": {
+            "type": "integer",
+            "title": "Max Lease Length"
+          },
+          "layout_preference": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Layout Preference",
+            "default": []
+          },
+          "unit_preference": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Unit Preference",
+            "default": []
+          },
+          "lead_sources": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Lead Sources",
+            "default": []
+          },
+          "first_contact_type": {
+            "type": "string",
+            "title": "First Contact Type"
+          },
+          "is_general_property": {
+            "type": "boolean",
+            "title": "Is General Property",
+            "default": false
+          },
+          "is_new_prospect": {
+            "type": "boolean",
+            "title": "Is New Prospect",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "event_date",
+          "elise_property_id"
+        ],
+        "title": "ProspectUpdateWebhookEvent"
+      },
+      "AppointmentRequest": {
+        "properties": {
+          "tour_type": {
+            "$ref": "#/components/schemas/TourType"
+          },
+          "appointment_time": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Appointment Time"
+          }
+        },
+        "type": "object",
+        "required": [
+          "tour_type",
+          "appointment_time"
+        ],
+        "title": "AppointmentRequest"
+      },
+      "EliseAI__elise_api__model__prospect__ProspectStatus": {
+        "type": "string",
+        "enum": [
+          "ApplicationStarted",
+          "ApplicationCompleted",
+          "ApplicationApproved",
+          "ApplicationRejected",
+          "ApplicationCanceled",
+          "LeaseStarted",
+          "LeaseApproved",
+          "LeasePartiallyCompleted",
+          "LeaseCompleted"
+        ],
+        "title": "ProspectStatus",
+        "description": "An enumeration."
+      },
+      "CreateProspectResponse": {
+        "properties": {
+          "elise_prospect_id": {
+            "type": "string",
+            "title": "Elise Prospect Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "elise_prospect_id"
+        ],
+        "title": "CreateProspectResponse"
+      },
+      "ProspectVerificationStatus": {
+        "type": "string",
+        "enum": [
+          "NOT_STARTED",
+          "STARTED",
+          "FAILED",
+          "SUCCESSFUL",
+          "ERROR",
+          "EXPIRED",
+          "CANCELLED",
+          "PENDING_REVIEW"
+        ],
+        "title": "ProspectVerificationStatus",
+        "description": "status of an id verification attempt. Currently, mirroring Plaid's status "
+      },
+      "CreateProspectRequest": {
+        "properties": {
+          "first_name": {
+            "type": "string",
+            "title": "First Name"
+          },
+          "last_name": {
+            "type": "string",
+            "title": "Last Name"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email",
+            "description": "Valid email address",
+            "example": "john.doe@example.com"
+          },
+          "phone": {
+            "type": "string",
+            "title": "Phone",
+            "description": "Phone number in E.164 format (e.g. +12025550179)",
+            "example": "+12025550179"
+          },
+          "move_in_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Move In Date"
+          },
+          "bedrooms": {
+            "type": "integer",
+            "minimum": 0,
+            "title": "Bedrooms",
+            "description": "Number of bedrooms prospect is interested in",
+            "example": 2
+          },
+          "bathrooms": {
+            "type": "integer",
+            "minimum": 0,
+            "title": "Bathrooms",
+            "description": "Number of bathrooms prospect is interested in",
+            "example": 2
+          },
+          "minimum_budget": {
+            "type": "integer",
+            "minimum": 0,
+            "title": "Minimum Budget",
+            "description": "Minimum monthly rent budget in USD",
+            "example": 1500
+          },
+          "maximum_budget": {
+            "type": "integer",
+            "minimum": 0,
+            "title": "Maximum Budget",
+            "description": "Maximum monthly rent budget in USD",
+            "example": 2500
+          },
+          "min_lease_length": {
+            "type": "integer",
+            "minimum": 0,
+            "title": "Min Lease Length",
+            "description": "Minimum desired lease term in months",
+            "example": 12
+          },
+          "max_lease_length": {
+            "type": "integer",
+            "minimum": 0,
+            "title": "Max Lease Length",
+            "description": "Maximum desired lease term in months",
+            "example": 18
+          },
+          "vendor_prospect_id": {
+            "type": "string",
+            "title": "Vendor Prospect Id",
+            "description": "External vendor prospect IDIf provided, subsequent webhook events will include this ID.Vendor source is attributed to ID from API credentials",
+            "example": "etS123456"
+          },
+          "vendor_source": {
+            "type": "string",
+            "title": "Vendor Source",
+            "description": "Vendor prospect id source.Field can only be set by internal EliseApi user, otherwise it is inferred through API credentials"
+          },
+          "elise_prospect_id": {
+            "type": "string",
+            "title": "Elise Prospect Id",
+            "description": "Unique identifier for the prospect in Elise's system.",
+            "example": "c21b94e2-0280-415d-9d1e-091b547a0061"
+          },
+          "property_id": {
+            "type": "string",
+            "title": "Property Id",
+            "description": "Unique identifier for the property in Elise's system. Required for vendors",
+            "example": "c21b94e2-0280-415d-9d1e-091b547a0061"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source",
+            "description": "The source or channel through which the prospect was acquired. Required for all, but pass-through for PMS and third-party property management companies.",
+            "example": "Zillow"
+          },
+          "external_prospect_id": {
+            "type": "string",
+            "title": "External Prospect Id",
+            "description": "External prospect ID from property management system. Only allowed when request is sent from a PMS or third-party property management company. If provided, subsequent webhook events will include this ID.",
+            "example": "PMS123456"
+          },
+          "external_property_id": {
+            "type": "string",
+            "title": "External Property Id",
+            "description": "External property ID from property management system. Only allowed when request is sent from a PMS or third-party property management company.",
+            "example": "property123"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "[DEPRECATED] Current status of the prospect in the application/leasing process. This should be updated by passing Status events.",
+            "example": "ApplicationStarted"
+          },
+          "events": {
+            "items": {
+              "$ref": "#/components/schemas/Event"
+            },
+            "type": "array",
+            "title": "Events",
+            "description": "List of events (appointments, notes, communications etc.) associated with this prospect creation"
+          }
+        },
+        "type": "object",
+        "title": "CreateProspectRequest"
+      },
+      "AppointmentStatus": {
+        "type": "string",
+        "enum": [
+          "confirmed",
+          "cancelled"
+        ],
+        "title": "AppointmentStatus",
+        "description": "An enumeration."
+      },
+      "ProspectOptInEvent": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "OptIn",
+            "title": "Type",
+            "default": "OptIn"
+          },
+          "event_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Event Date"
+          },
+          "elise_prospect_id": {
+            "type": "string",
+            "title": "Elise Prospect Id"
+          },
+          "external_prospect_id": {
+            "type": "string",
+            "title": "External Prospect Id"
+          },
+          "elise_property_id": {
+            "type": "string",
+            "title": "Elise Property Id"
+          },
+          "external_property_id": {
+            "type": "string",
+            "title": "External Property Id"
+          },
+          "vendor_prospect_id": {
+            "type": "string",
+            "title": "Vendor Prospect Id"
+          },
+          "conversation_link": {
+            "type": "string",
+            "title": "Conversation Link"
+          },
+          "mediums": {
+            "items": {
+              "$ref": "#/components/schemas/Medium"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "event_date",
+          "elise_property_id",
+          "mediums"
+        ],
+        "title": "ProspectOptInEvent"
+      },
+      "AppointmentCanceledEvent": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "AppointmentCanceled",
+            "title": "Type",
+            "default": "AppointmentCanceled"
+          },
+          "event_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Event Date"
+          },
+          "appointment_id": {
+            "type": "string",
+            "title": "Appointment Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "event_date",
+          "appointment_id"
+        ],
+        "title": "AppointmentCanceledEvent"
+      },
+      "AppointmentAvailability": {
+        "properties": {
+          "availability": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/TourTypeAvailability"
+            },
+            "type": "object",
+            "title": "Availability"
+          },
+          "timezone": {
+            "type": "string",
+            "title": "Timezone"
+          }
+        },
+        "type": "object",
+        "required": [
+          "availability",
+          "timezone"
+        ],
+        "title": "AppointmentAvailability",
+        "example": {
+          "availability": {
+            "guided": {
+              "available_tour_start_times": [
+                "2024-02-01T09:00:00-08:00",
+                "2024-02-02T09:00:00-08:00"
+              ],
+              "tour_duration_minutes": 45
+            },
+            "sgt": {
+              "available_tour_start_times": [
+                "2024-02-01T10:30:00-08:00",
+                "2024-02-02T10:30:00-08:00"
+              ],
+              "tour_duration_minutes": 30
+            }
+          },
+          "timezone": "America/Los_Angeles"
+        }
+      },
+      "PriceMatrixContent": {
+        "properties": {
+          "dateAvailable": {
+            "type": "string",
+            "title": "Dateavailable"
+          },
+          "rent": {
+            "type": "number",
+            "title": "Rent"
+          },
+          "leaseTermLength": {
+            "type": "integer",
+            "title": "Leasetermlength"
+          },
+          "occupancyType": {
+            "type": "string",
+            "title": "Occupancytype"
+          },
+          "endTermDate": {
+            "type": "string",
+            "title": "Endtermdate"
+          },
+          "termName": {
+            "type": "string",
+            "title": "Termname"
+          }
+        },
+        "type": "object",
+        "required": [
+          "dateAvailable",
+          "rent",
+          "leaseTermLength"
+        ],
+        "title": "PriceMatrixContent"
+      },
+      "Resident": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "Unique identifier for the resident",
+            "example": "res_12345"
+          },
+          "first_name": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "First Name",
+            "description": "Resident's first name",
+            "example": "Emma"
+          },
+          "middle_name": {
+            "type": "string",
+            "maxLength": 100,
+            "title": "Middle Name",
+            "description": "Resident's middle name",
+            "example": "Rose"
+          },
+          "last_name": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Last Name",
+            "description": "Resident's last name",
+            "example": "Johnson"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email",
+            "description": "Resident's primary email address",
+            "example": "emma.johnson@example.com"
+          },
+          "phone_numbers": {
+            "items": {
+              "$ref": "#/components/schemas/PhoneNumber"
+            },
+            "type": "array",
+            "title": "Phone Numbers",
+            "description": "List of resident's phone numbers"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "When this resident record was created",
+            "example": "2023-12-15T10:30:00Z"
+          },
+          "created_by": {
+            "type": "string",
+            "title": "Created By",
+            "description": "ID of user or system that created this record"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At",
+            "description": "When this resident record was last modified",
+            "example": "2024-01-01T14:20:00Z"
+          },
+          "updated_by": {
+            "type": "string",
+            "title": "Updated By",
+            "description": "ID of user or system that last updated this record"
+          },
+          "deleted_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Deleted At",
+            "description": "When this resident was soft-deleted (null if active)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "first_name",
+          "last_name",
+          "created_at",
+          "created_by",
+          "updated_at",
+          "updated_by"
+        ],
+        "title": "Resident",
+        "description": "A resident represents a person who lives or has lived in a property unit.\n\nResidents can have multiple lease relationships across different units and time periods.\nThis object contains their core contact information and identity details.",
+        "example": {
+          "id": "res_12345",
+          "first_name": "Emma",
+          "middle_name": "Rose",
+          "last_name": "Johnson",
+          "email": "emma.johnson@example.com",
+          "phone_numbers": [
+            {
+              "type": "CELL",
+              "number": "+14155552671",
+              "is_primary": true
+            },
+            {
+              "type": "WORK",
+              "number": "+14155552672",
+              "is_primary": false
+            }
+          ],
+          "created_at": "2023-12-15T10:30:00Z",
+          "created_by": "usr_12345",
+          "updated_at": "2024-01-01T14:20:00Z",
+          "updated_by": "usr_12345"
+        }
+      },
+      "CalendarAppointmentCancelledEvent": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "AppointmentCancelled",
+            "title": "Type",
+            "default": "AppointmentCancelled"
+          },
+          "event_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Event Date"
+          },
+          "calendar_event_id": {
+            "type": "integer",
+            "title": "Calendar Event Id"
+          },
+          "elise_property_id": {
+            "type": "string",
+            "title": "Elise Property Id"
+          },
+          "external_property_id": {
+            "type": "string",
+            "title": "External Property Id"
+          },
+          "elise_prospect_id": {
+            "type": "string",
+            "title": "Elise Prospect Id"
+          },
+          "external_prospect_id": {
+            "type": "string",
+            "title": "External Prospect Id"
+          },
+          "conversation_link": {
+            "type": "string",
+            "title": "Conversation Link"
+          },
+          "start_time": {
+            "type": "string",
+            "title": "Start Time"
+          },
+          "end_time": {
+            "type": "string",
+            "title": "End Time"
+          },
+          "tour_type": {
+            "type": "string",
+            "title": "Tour Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "event_date",
+          "calendar_event_id",
+          "elise_property_id",
+          "start_time",
+          "end_time",
+          "tour_type"
+        ],
+        "title": "CalendarAppointmentCancelledEvent"
+      },
+      "CalendarAppointmentNoShowEvent": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "AppointmentNoShow",
+            "title": "Type",
+            "default": "AppointmentNoShow"
+          },
+          "event_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Event Date"
+          },
+          "calendar_event_id": {
+            "type": "integer",
+            "title": "Calendar Event Id"
+          },
+          "elise_property_id": {
+            "type": "string",
+            "title": "Elise Property Id"
+          },
+          "external_property_id": {
+            "type": "string",
+            "title": "External Property Id"
+          },
+          "elise_prospect_id": {
+            "type": "string",
+            "title": "Elise Prospect Id"
+          },
+          "external_prospect_id": {
+            "type": "string",
+            "title": "External Prospect Id"
+          },
+          "conversation_link": {
+            "type": "string",
+            "title": "Conversation Link"
+          },
+          "no_show_time": {
+            "type": "string",
+            "title": "No Show Time"
+          },
+          "start_time": {
+            "type": "string",
+            "title": "Start Time"
+          },
+          "end_time": {
+            "type": "string",
+            "title": "End Time"
+          },
+          "tour_type": {
+            "type": "string",
+            "title": "Tour Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "event_date",
+          "calendar_event_id",
+          "elise_property_id",
+          "no_show_time",
+          "start_time",
+          "end_time",
+          "tour_type"
+        ],
+        "title": "CalendarAppointmentNoShowEvent"
+      },
+      "ProspectVoiceAIEvent": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "VoiceAI",
+            "title": "Type",
+            "default": "VoiceAI"
+          },
+          "event_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Event Date"
+          },
+          "elise_prospect_id": {
+            "type": "string",
+            "title": "Elise Prospect Id"
+          },
+          "external_prospect_id": {
+            "type": "string",
+            "title": "External Prospect Id"
+          },
+          "elise_property_id": {
+            "type": "string",
+            "title": "Elise Property Id"
+          },
+          "external_property_id": {
+            "type": "string",
+            "title": "External Property Id"
+          },
+          "vendor_prospect_id": {
+            "type": "string",
+            "title": "Vendor Prospect Id"
+          },
+          "conversation_link": {
+            "type": "string",
+            "title": "Conversation Link"
+          },
+          "to_phone_number": {
+            "type": "string",
+            "title": "To Phone Number"
+          },
+          "from_phone_number": {
+            "type": "string",
+            "title": "From Phone Number"
+          },
+          "voice_recording_url": {
+            "type": "string",
+            "title": "Voice Recording Url"
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "event_date",
+          "elise_property_id",
+          "to_phone_number",
+          "from_phone_number"
+        ],
+        "title": "ProspectVoiceAIEvent"
+      },
+      "Activity": {
+        "properties": {
+          "event": {
+            "$ref": "#/components/schemas/Event"
+          },
+          "prospect_id": {
+            "type": "string",
+            "title": "Prospect Id"
+          },
+          "resident_id": {
+            "type": "string",
+            "title": "Resident Id"
+          },
+          "responsibility": {
+            "$ref": "#/components/schemas/Responsibility"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event",
+          "responsibility"
+        ],
+        "title": "Activity"
+      },
+      "PhoneNumber": {
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PhoneNumberType"
+              }
+            ],
+            "description": "The type of phone number"
+          },
+          "number": {
+            "type": "string",
+            "pattern": "^\\+[1-9]\\d{1,14}$",
+            "title": "Number",
+            "description": "Phone number in E.164 format",
+            "example": "+14155552671"
+          },
+          "is_primary": {
+            "type": "boolean",
+            "title": "Is Primary",
+            "description": "Whether this is the primary contact number",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "type",
+          "number"
+        ],
+        "title": "PhoneNumber",
+        "description": "A resident's phone number with type classification",
+        "example": {
+          "type": "CELL",
+          "number": "+14155552671",
+          "is_primary": true
+        }
+      },
+      "EliseReactivatedEvent": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "EliseReactivated",
+            "title": "Type",
+            "default": "EliseReactivated"
+          },
+          "event_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Event Date"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "event_date"
+        ],
+        "title": "EliseReactivatedEvent"
+      },
+      "MarkAppointmentOutcomeResult": {
+        "properties": {
+
+        },
+        "type": "object",
+        "title": "MarkAppointmentOutcomeResult"
+      }
+    }
+  }
+}
