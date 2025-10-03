@@ -9,6 +9,15 @@
     "dark": "#190a4b"
   },
   "favicon": "/favicon.svg",
+  "api": {
+    "playground": {
+      "display": "interactive"
+    },
+    "examples": {
+      "languages": ["curl", "python", "javascript"],
+      "defaults": "required"
+    }
+  },
   "navigation": {
     "tabs": [
       {
