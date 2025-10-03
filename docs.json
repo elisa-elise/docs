@@ -21,6 +21,22 @@
               "quickstart",
               "development"
             ]
+          },
+          {
+            "group": "ILS Workflows",
+            "pages": [
+              "index",
+              "quickstart",
+              "development"
+            ]
+          },
+          {
+            "group": "Virtual Tour Scheduling",
+            "pages": [
+              "index",
+              "quickstart",
+              "development"
+            ]
           }
         ]
       },
