@@ -19,6 +19,25 @@
     }
   },
   "navigation": {
+    "groups": [
+      {
+        "group": "Public group",
+        "public": true,
+        "icon": "play",
+        "pages": [
+          "index",
+          "quickstart"
+        ]
+      },
+      {
+        "group": "Private group",
+        "icon": "pause",
+        "pages": [
+          "development",
+          "api-reference"
+        ]
+      }
+    ],
     "tabs": [
       {
         "tab": "Guides",
