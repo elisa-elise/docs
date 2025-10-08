@@ -32,19 +32,13 @@
             ]
           },
           {
-            "group": "ILS Workflows",
+            "group": "Leases Information",
             "pages": [
-              "index",
-              "quickstart",
-              "development"
             ]
           },
           {
-            "group": "Tour Providers Workflows",
+            "group": "Ledger Information",
             "pages": [
-              "index",
-              "quickstart",
-              "development"
             ]
           }
         ]
