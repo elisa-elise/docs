@@ -9,8 +9,6 @@ public: true
 Before you begin you'll need:
 
 - A Bearer token (see Authentication section below)
-- [Property IDs]
-- [some agreement?]
 
 ## Authentication
 
@@ -37,19 +35,19 @@ Once you have your token, you can start making requests to the EliseAI API.
 Here's a basic example using cURL:
 
 ```bash
-curl -X GET https://api.eliseai.com/v2/properties/12345/units \
+curl -X GET https://api.eliseai.com/v2/properties?limit=25 \
   -H "Authorization: Bearer YOUR_API_TOKEN" \
   -H "Content-Type: application/json"
 ```
 
-Make sure to substitute`12345`for a property_id you've been given access to.
+The call will return all the properties your token has access to.
 
 ### Example: Python
 
 ```python
 import requests
 
-url = "https://api.eliseai.com/v2/properties/12345/units"
+url = "https://api.eliseai.com/v2/properties?limit=25"
 headers = {
     "Authorization": "Bearer YOUR_API_TOKEN",
     "Content-Type": "application/json"
@@ -65,7 +63,7 @@ print(data)
 ```javascript
 const fetch = require('node-fetch');
 
-const url = 'https://api.eliseai.com/v2/properties/12345/units';
+const url = 'https://api.eliseai.com/v2/properties?limit=25';
 const headers = {
   'Authorization': 'Bearer YOUR_API_TOKEN',
   'Content-Type': 'application/json'
@@ -83,29 +81,27 @@ All API responses are returned in JSON format. A successful response will return
 
 ```json
 {
-  "units": [
+  "properties": [
     {
-      "id": "string",
-      "property_id": "string",
-      "unit_number": "string",
-      "unit_type": "residential",
-      "status": "vacant",
-      "bedrooms": 0,
-      "bathrooms": 0,
-      "square_feet": 1,
-      "floor": 0,
-      "building": "string",
-      "floor_plan": "string",
-      "market_rent": 0,
-      "available_date": "2025-10-02",
-      "created_at": "2025-10-02T17:04:12.402Z",
-      "updated_at": "2025-10-02T17:04:12.402Z"
+      "id": "11254",
+      "name": "Scraper Tower",
+      "property_type": "multi_family",
+      "status": "active",
+      "address": {
+        "street_address": "82 Schermerhorn St",
+        "unit_number": null,
+        "city": "Brooklyn",
+        "state": "NY",
+        "postal_code": "10349",
+        "country": "US"
+      },
+      "total_units": null,
+      "external_ids": []
     }
   ],
   "pagination": {
-    "total": 156,
-    "limit": 100,
-    "offset": 0
+    "next_cursor": null,
+    "has_more": false
   }
 }
 ```
