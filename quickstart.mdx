@@ -118,18 +118,6 @@ All API responses are returned in JSON format. A successful response will return
 | **429 Too Many Requests**     | Rate limit exceeded                      |
 | **500 Internal Server Error** | Server error                             |
 
-## Rate Limiting
-
-The EliseAI API does not currently enforce rate limits. However, to ensure optimal performance and prepare for future rate limiting, we strongly recommend implementing request throttling on your end.
-
-**Recommended practices:**
-
-- Implement reasonable delays between requests
-- Use batch operations where available
-- Avoid making unnecessary or redundant API calls
-
-We will be introducing rate limits in the near future. This documentation will be updated with specific limits and headers once implemented.
-
 ## Best Practices
 
 - **Keep your token secure** - Never expose your API token in client-side code or public repositories

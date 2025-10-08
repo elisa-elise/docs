@@ -28,7 +28,8 @@
             "pages": [
               "index",
               "quickstart",
-              "development"
+              "development",
+              "rate-limiting"
             ]
           },
           {

@@ -1,0 +1,58 @@
+---
+title: "Rate Limiting"
+---
+
+## Overview
+
+Our API implements rate limiting to ensure fair usage and maintain service reliability for all vendors. Rate limits are applied on a per-vendor basis and are determined by your access configuration.
+
+## Rate Limit Configuration
+
+Your rate limit is based on the number of buildings your vendor account has access to:
+
+- **Rate Limit:** 10 requests per hour × number of buildings you have access to
+- _Example: Access to 50 buildings = 500 requests per hour_
+
+### Multiple Bundles
+
+If your vendor account is assigned to multiple bundles, the rate limit for each request is determined by the specific bundle being accessed in that request.
+
+## Rate Limit Headers
+
+Every API response includes standard rate limiting headers to help you track your usage:
+
+| Header                  | Description                                                                               | |
+| :---------------------- | :---------------------------------------------------------------------------------------- | --- |
+| `X-RateLimit-Limit`     | The maximum number of requests allowed for your current endpoint and vendor configuration | |
+| `X-RateLimit-Remaining` | The number of requests remaining in the current rate limit window                         | |
+| `X-RateLimit-Reset`     | The number of seconds until your rate limit resets                                        | |
+
+These headers follow the [IETF RFC draft standard](https://www.ietf.org/archive/id/draft-polli-ratelimit-headers-02.html).
+
+### Example Response Headers
+
+```
+X-RateLimit-Limit: 500
+X-RateLimit-Remaining: 247
+X-RateLimit-Reset: 1842
+```
+
+## Exceeding Rate Limits
+
+If you exceed your rate limit, the API will return:
+
+- **HTTP Status Code:** `429 Too Many Requests`
+- The `X-RateLimit-Reset` header will indicate when you can resume making requests
+
+## Best Practices
+
+To avoid hitting rate limits:
+
+1. **Monitor the headers:** Check `X-RateLimit-Remaining` in your responses to track usage
+2. **Implement retry logic:** When you receive a 429 response, wait for the duration specified in `X-RateLimit-Reset` before retrying
+3. **Distribute requests:** Spread your API calls evenly throughout the hour rather than making bursts of requests
+4. **Cache responses:** Store and reuse API responses when appropriate to reduce unnecessary calls
+
+## Need a Higher Rate Limit?
+
+If your integration requires a higher rate limit, please contact our support team to discuss your use case and explore available options.
