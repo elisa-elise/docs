@@ -36,10 +36,16 @@
             ]
           },
           {
-            "group": "Data Model",
+            "group": "Leases",
             "pages": [
-              "data-model/leases",
-              "data-model/ledger"
+              "leases/overview"
+            ]
+          },
+          {
+            "group": "Ledger",
+            "pages": [
+              "ledger/overview",
+              "ledger/ledger-workflows"
             ]
           }
         ]
