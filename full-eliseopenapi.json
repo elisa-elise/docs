@@ -1201,7 +1201,7 @@
                     "groups": [
                       "ADMIN"
                     ],
-                    "tag": "Private"
+                    "tag": "Private", "public":true
                   }
                 },
                 "tags": [
