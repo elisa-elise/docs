@@ -8,6 +8,14 @@
   "paths": {
     "/v1/prospect/{elise_prospect_id}": {
       "get": {
+        "x-mint": {
+          "metadata": {
+            "groups": [
+              "admin"
+            ],
+            "tag": "Private"
+          }
+        },
         "tags": [
           "Prospect"
         ],
