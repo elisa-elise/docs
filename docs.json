@@ -14,7 +14,11 @@
       "display": "interactive"
     },
     "examples": {
-      "languages": ["curl", "python", "javascript"],
+      "languages": [
+        "curl",
+        "python",
+        "javascript"
+      ],
       "defaults": "required"
     }
   },
@@ -27,18 +31,8 @@
             "group": "Getting Started",
             "pages": [
               "quickstart",
-              "webhooks",
+              "development",
               "rate-limiting"
-            ]
-          },
-          {
-            "group": "Leases Information",
-            "pages": [
-            ]
-          },
-          {
-            "group": "L Information",
-            "pages": [
             ]
           }
         ]
