@@ -38,17 +38,4 @@ GET /v2/leases/properties/{property_id}/leases?status=Current&limit=500&offset=1
 
 **Response Fields to Use**:
 
-- `lease.unit_number` - Unit identifier
-- `lease.id` - Lease identifier
 - `members[].is_current_occupant` - Currently occupying (true/false)
-- `members[].resident.id` - Resident identifier
-- `members[].resident.first_name` - First name
-- `members[].resident.last_name` - Last name
-
-**Key Integration Points**:
-
-- Use `is_current_occupant = true` for accurate occupancy status
-- Handle pagination for large properties
-- Process in batches to avoid API limits
-
-### 
