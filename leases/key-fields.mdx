@@ -5,7 +5,7 @@ groups: ["ADMIN","USER"]
 
 ## Overview
 
-This documentation explains the business logic and key field meanings for the EliseAI Leasing API. It focuses on understanding the data returned by the `/v2/leases/properties/{property_id}/leases` endpoint and the logic behind fields like statuses values and dates. 
+This documentation explains the business logic and key field meanings for the EliseAI Leasing API. It focuses on understanding the data returned by the `/v2/leases/properties/{property_id}/leases` endpoint and the logic behind fields like statuses values and dates.
 
 ## Key Field Logic and Business Rules
 
@@ -179,7 +179,7 @@ The `renters_insurance` object contains policy details (currently not populated 
 - `cancelled`: Policy was cancelled
 - `not_required`: Insurance is not required for this lease
 
-### Resident Contact Information 
+### Resident Contact Information
 
 **Resident Contact Address**
 
@@ -192,7 +192,6 @@ The `renters_insurance` object contains policy details (currently not populated 
 **Lease Transfers (Onsite Transfers)**
 
 - **Current Status**: EliseAI does not currently expose a dedicated field for lease transfers
-- **Future Plans**: A transfer field will be added in future API versions
 - **How to Identify Transfers**: Look for the same `resident_id` appearing on different leases
 - **Logic**: When a resident transfers from one unit to another, they maintain the same resident ID but appear on a new lease
 - **Use Case**: Track residents who move between units within the same property
