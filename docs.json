@@ -38,14 +38,15 @@
           {
             "group": "Leases",
             "pages": [
-              "leases/key-fields"
+              "leases/key-fields",
+              "leases/workflows"
             ]
           },
           {
             "group": "Ledger",
             "pages": [
               "ledger/key-fields",
-              "ledger/ledger-workflows"
+              "ledger/workflows"
             ]
           }
         ]
