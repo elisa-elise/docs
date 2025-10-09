@@ -11,7 +11,7 @@
         "x-mint": {
           "metadata": {
             "groups": [
-              "admin"
+              "ADMIN"
             ],
             "tag": "Private"
           }
