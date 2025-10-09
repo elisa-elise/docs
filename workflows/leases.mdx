@@ -2,3 +2,289 @@
 title: "Leases"
 description: "Description of your new file."
 ---
+
+
+## Overview
+
+The EliseAI Leasing API provides comprehensive access to lease agreements, resident information, and occupancy data for property management operations. This documentation explains the key endpoints, data models, and business logic that vendors need to understand when integrating with our leasing system.
+
+## Base URL
+
+```
+https://api.eliseai.com/v2/leases
+```
+
+## Authentication
+
+All endpoints require API key authentication via the `Authorization` header:
+
+```
+Authorization: Bearer YOUR_API_KEY
+```
+
+## Primary Endpoint
+
+### GET `/properties/{property_id}/leases`
+
+Retrieves a paginated list of leases with their associated members (residents) for a specific property.
+
+**URL Parameters:**
+
+- `property_id` (string): The property/building ID (numeric, no prefix)
+
+**Query Parameters:**
+
+- `limit` (integer, optional): Number of leases to return (1-500, default: 100)
+- `offset` (integer, optional): Number of leases to skip for pagination (default: 0)
+- `status` (string, optional): Filter by lease status
+- `unit_id` (string, optional): Filter by unit ID (with 'u\_' prefix)
+- `lease_start_date_from` (date, optional): Filter leases starting on or after this date
+- `lease_start_date_to` (date, optional): Filter leases starting on or before this date
+- `lease_end_date_from` (date, optional): Filter leases ending on or after this date
+- `lease_end_date_to` (date, optional): Filter leases ending on or before this date
+
+## Data Models and Business Logic
+
+### Lease Status Values
+
+The `status` field indicates the current state of a lease agreement:
+
+| Status            | Description                                    | Business Logic                                                    |
+| ----------------- | ---------------------------------------------- | ----------------------------------------------------------------- |
+| **Applicant**     | Application submitted but not yet approved     | Person has applied but lease is not yet signed or approved        |
+| **Future**        | Approved lease with future start date          | Lease is signed but move-in date hasn't arrived yet               |
+| **Current**       | Active lease with residents living in the unit | Lease is active and residents are currently occupying the unit    |
+| **Notice**        | Lease with notice to vacate given              | Resident has given notice to move out but hasn't moved yet        |
+| **Waitlist**      | Person is on a waitlist for a unit             | Person is waiting for a unit to become available                  |
+| **Former**        | Lease has ended and residents have moved out   | Lease period is complete and residents are no longer living there |
+| **UnderEviction** | Eviction process has been initiated            | Legal eviction proceedings are underway                           |
+| **Evicted**       | Residents have been legally evicted            | Eviction process completed, residents removed                     |
+| **Cancelled**     | Lease was cancelled before completion          | Lease was terminated before residents moved in or during the term |
+| **Collections**   | Account is in collections for unpaid amounts   | Financial obligations remain unpaid and account is in collections |
+| **Other**         | Catch-all for undefined statuses               | Used when status doesn't fit other categories                     |
+
+### Resident Status Values
+
+The `resident_status` field indicates an individual's status within a lease:
+
+| Status             | Description                        | Business Logic                                  |
+| ------------------ | ---------------------------------- | ----------------------------------------------- |
+| **RESIDENT**       | Currently living in the unit       | Person is actively residing in the unit         |
+| **NOTICE**         | Has given notice to move out       | Person has provided notice but hasn't moved yet |
+| **FORMER**         | No longer living in the unit       | Person has moved out of the unit                |
+| **FUTURE**         | Will move in on a future date      | Person is scheduled to move in but hasn't yet   |
+| **APPLICANT**      | Has applied but not yet approved   | Person is in the application process            |
+| **WAITLIST**       | On waitlist for a unit             | Person is waiting for availability              |
+| **UNDER_EVICTION** | Eviction process initiated         | Legal eviction proceedings are active           |
+| **EVICTED**        | Has been legally evicted           | Eviction process completed                      |
+| **CANCELLED**      | Application or lease was cancelled | Process was terminated                          |
+| **COLLECTIONS**    | Account is in collections          | Financial obligations remain unpaid             |
+
+### Occupant Type Values
+
+The `occupant_type` field defines a person's relationship to the lease:
+
+| Type          | Description                        | Business Logic                                                       |
+| ------------- | ---------------------------------- | -------------------------------------------------------------------- |
+| **PRIMARY**   | Main leaseholder/head of household | Primary person responsible for the lease, typically the main contact |
+| **ROOMMATE**  | Additional adult occupant          | Additional adult living in the unit but not the primary leaseholder  |
+| **DEPENDENT** | Minor child or dependent           | Child or dependent who doesn't have lease responsibility             |
+| **GUARANTOR** | Financial guarantor                | Person who guarantees payment but doesn't live in the unit           |
+| **OTHER**     | Other relationship                 | Catch-all for other occupant types                                   |
+
+### Date Fields Logic
+
+#### Move-In Date (`move_in_date`)
+
+- **Purpose**: When the resident actually moved into the unit
+- **Logic**: This may differ from the lease start date if there were delays or early move-ins
+- **Null values**: Indicates the person hasn't moved in yet (Future residents, Applicants)
+
+#### Move-Out Date (`move_out_date`)
+
+- **Purpose**: When the resident actually moved out of the unit
+- **Logic**: Set when the person physically vacates the unit
+- **Null values**: Indicates the person is still living in the unit
+- **Validation**: Must be on or after the move-in date
+
+#### Notice Date (`notice_date`)
+
+- **Purpose**: When the resident provided notice to vacate
+- **Logic**: Typically 30-60 days before the move-out date, depending on lease terms
+- **Null values**: Indicates no notice has been given yet
+- **Validation**: Should be before the move-out date
+
+#### Lease Term Dates
+
+- **Start Date**: When the lease agreement begins
+- **End Date**: When the lease agreement ends (null for month-to-month leases)
+
+### Renter's Insurance Information
+
+The `renters_insurance` object contains policy details:
+
+```json
+{
+  "required": true,
+  "provider": "State Farm",
+  "policy_number": "SF-123456789",
+  "coverage_amount": 100000,
+  "expiration_date": "2025-01-01",
+  "status": "active"
+}
+```
+
+**Status Values:**
+
+- `pending`: Policy is being processed
+- `active`: Policy is current and valid
+- `expired`: Policy has expired
+- `cancelled`: Policy was cancelled
+- `not_required`: Insurance is not required for this lease
+
+## Response Structure
+
+### Complete Response Example
+
+```json
+{
+  "leases": [
+    {
+      "lease": {
+        "id": "lease_550e8400-e29b-41d4-a716-446655440000",
+        "unit_id": "u_12345",
+        "unit_number": "2A",
+        "status": "Current",
+        "is_month_to_month": false,
+        "lease_term": {
+          "start_date": "2024-01-01",
+          "end_date": "2024-12-31"
+        },
+        "deleted_at": null
+      },
+      "members": [
+        {
+          "resident": {
+            "id": "res_a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+            "first_name": "Emma",
+            "last_name": "Johnson",
+            "email": "emma.johnson@example.com"
+          },
+          "resident_status": "RESIDENT",
+          "occupant_type": "PRIMARY",
+          "move_in_date": "2024-01-01",
+          "move_out_date": "2025-01-01",
+          "notice_date": "2024-11-01",
+          "renters_insurance": {
+            "required": true,
+            "provider": "State Farm",
+            "policy_number": "SF-123456789",
+            "coverage_amount": 100000,
+            "expiration_date": "2025-01-01",
+            "status": "active"
+          }
+        }
+      ]
+    }
+  ],
+  "pagination": {
+    "total": 45,
+    "limit": 100,
+    "offset": 0
+  }
+}
+```
+
+## Common Use Cases
+
+### 1. Get All Active Leases
+
+```bash
+GET /properties/12345/leases?lease_end_date_from=2024-01-01
+```
+
+### 2. Get Leases for a Specific Unit
+
+```bash
+GET /properties/12345/leases?unit_id=u_12345
+```
+
+### 3. Get Leases Starting This Year
+
+```bash
+GET /properties/12345/leases?lease_start_date_from=2024-01-01&lease_start_date_to=2024-12-31
+```
+
+### 4. Get Only Current Leases
+
+```bash
+GET /properties/12345/leases?status=Current
+```
+
+### 5. Get Leases with Notice Given
+
+```bash
+GET /properties/12345/leases?status=Notice
+```
+
+## Data Synchronization Notes
+
+### External System Integration
+
+- EliseAI integrates with multiple property management systems (Progress, RealPage, AMH, MRI, Yardi, etc.)
+- Each system maps their status values to EliseAI's standard enums
+- Data is synchronized regularly to ensure accuracy
+
+### Status Priority Logic
+
+When multiple residents have different statuses on the same lease, EliseAI uses a priority system:
+
+ 1. RESIDENT (highest priority)
+ 2. NOTICE
+ 3. EVICTED
+ 4. UNDER_EVICTION
+ 5. COLLECTIONS
+ 6. FORMER
+ 7. FUTURE
+ 8. APPLICANT
+ 9. CANCELLED
+10. WAITLIST (lowest priority)
+
+### Data Freshness
+
+- Lease data is updated in real-time as changes occur
+- Resident status changes are reflected immediately
+- Historical data is preserved for audit purposes
+
+## Error Handling
+
+### Common HTTP Status Codes
+
+- `200`: Success
+- `400`: Bad request - invalid parameters
+- `401`: Unauthorized - invalid or missing API key
+- `403`: Forbidden - insufficient permissions
+- `404`: Not found - resource doesn't exist
+- `422`: Unprocessable entity - validation error
+- `500`: Internal server error
+
+### Error Response Format
+
+```json
+{
+  "detail": "Error message describing what went wrong"
+}
+```
+
+## Best Practices
+
+1. **Pagination**: Always use pagination for large datasets to avoid timeouts
+2. **Filtering**: Use date filters to limit data to relevant time periods
+3. **Status Filtering**: Filter by specific statuses when you only need certain lease types
+4. **Rate Limiting**: Respect API rate limits to avoid throttling
+5. **Error Handling**: Implement proper error handling for all possible status codes
+6. **Data Validation**: Validate date relationships (move-in before move-out, notice before move-out)
+
+## Support
+
+For technical support or questions about the Leasing API, please contact the EliseAI integration team.

@@ -27,7 +27,7 @@
             "group": "Getting Started",
             "pages": [
               "quickstart",
-              "development",
+              "webhooks",
               "rate-limiting"
             ]
           },
