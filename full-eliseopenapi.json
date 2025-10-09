@@ -1199,7 +1199,6 @@
                 "x-mint": {
                   "metadata": {
                     "groups": [
-                      "ADMIN"
                     ],
                     "tag": "Private", "public":true
                   }
