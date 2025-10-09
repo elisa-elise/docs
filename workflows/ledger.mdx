@@ -1,0 +1,365 @@
+---
+title: 'EliseAI Ledger'
+---
+
+## Overview
+
+This documentation explains the business logic and key field meanings for the EliseAI Ledger API. It focuses on understanding the financial transaction data returned by the `/v2/ledger/properties/{property_id}/accounts/{account_id}/summary` endpoint and the logic behind balance calculations, transaction types, and collections status.
+
+## Key Field Logic and Business Rules
+
+### Transaction Types
+
+The `transaction_type` field indicates the nature of each financial transaction:
+
+| Type | Description | Business Logic | Balance Impact |
+|------|-------------|----------------|----------------|
+| **CHARGE** | Money owed by resident | Rent, utilities, fees, penalties | Increases balance |
+| **PAYMENT** | Money received from resident | Rent payments, utility payments | Decreases balance |
+| **ADJUSTMENT** | Non-financial corrections | Credits, debits, voids, write-offs | Can increase or decrease balance |
+| **REVERSAL** | Financial reversals | NSF, payment returns, charge reversals | Increases balance |
+
+### Charge Types
+
+The `charge_type` field categorizes different types of charges:
+
+| Type | Description | Business Logic |
+|------|-------------|----------------|
+| **RENT** | Monthly rent charges | Primary recurring charge for unit occupancy |
+| **UTILITIES** | Utility-related charges | Water, sewer, trash, electricity, gas, internet |
+| **LATE_FEE** | Late payment penalties | Applied when payments are received after due date |
+| **MAINTENANCE** | Maintenance-related charges | Repair costs, damage charges, cleaning fees |
+| **PARKING** | Parking-related charges | Parking fees, garage fees, permit costs |
+| **PET_FEE** | Pet-related charges | Pet deposits, monthly pet rent, pet fees |
+| **AMENITY** | Amenity-related charges | Gym fees, pool fees, storage fees |
+| **OTHER** | Miscellaneous charges | Catch-all for other charge types |
+
+### Payment Methods
+
+The `payment_method` field indicates how payments were received:
+
+| Method | Description | Business Logic |
+|--------|-------------|----------------|
+| **ACH** | Automated Clearing House | Electronic bank transfers, most common method |
+| **CHECK** | Physical or electronic checks | Traditional check payments |
+| **OTHER** | Other payment methods | Cash, money orders, wire transfers, etc. |
+
+### Adjustment Types
+
+The `adjustment_type` field indicates the nature of balance adjustments:
+
+| Type | Description | Business Logic |
+|------|-------------|----------------|
+| **CREDIT** | Positive adjustment | Reduces balance owed (concessions, refunds, corrections) |
+| **DEBIT** | Negative adjustment | Increases balance owed (additional charges, corrections) |
+
+### Collections Status
+
+The `collections` object tracks the account's collections status:
+
+| Status | Description | Business Logic |
+|--------|-------------|----------------|
+| **NOT_IN_COLLECTIONS** | Account is current | All charges are paid or within grace period |
+| **IN_COLLECTIONS** | Account is in collections | Outstanding balance past due threshold |
+
+## Balance Calculation Logic
+
+### Balance Fields
+
+**Balance Due (`balance_due`)**
+- **Purpose**: Amount currently owed by the resident
+- **Logic**: Only includes charges with `due_date <= today`
+- **Calculation**: Sum of unpaid charges that are currently due
+- **Use case**: Shows immediate financial obligation
+
+**Total Balance (`total_balance`)**
+- **Purpose**: Total amount owed including future charges
+- **Logic**: Includes all unpaid charges regardless of due date
+- **Calculation**: Sum of all unpaid charges (current + future)
+- **Use case**: Shows complete financial picture including upcoming obligations
+
+**Balance Relationship**
+- When there are no future charges: `balance_due = total_balance`
+- When future charges exist: `total_balance > balance_due`
+- Future charges are included in total but not in balance due until their due date arrives
+
+### Transaction Balance Tracking
+
+**Charge Balance (`balance` field)**
+- **Purpose**: Shows remaining unpaid amount for individual charges
+- **Logic**: Calculated as original charge amount minus all payments applied to that charge
+- **Null values**: Indicates charge is fully paid or not applicable to transaction type
+- **Use case**: Track partial payments and remaining amounts per charge
+
+## Transaction Timeline Logic
+
+### Date Fields
+
+**Transaction Date (`transaction_date`)**
+- **Purpose**: When the transaction actually occurred or takes effect
+- **Logic**: Business date of the transaction, not system processing date
+- **Use case**: Track when charges were incurred or payments were received
+
+**Created At (`created_at`)**
+- **Purpose**: When the record was created in the system
+- **Logic**: System timestamp of record creation
+- **Use case**: Audit trail and system processing timeline
+
+**Updated At (`updated_at`)**
+- **Purpose**: When the record was last modified
+- **Logic**: System timestamp of last update
+- **Use case**: Track record modifications and corrections
+
+**Due Date (`due_date`)**
+- **Purpose**: When charges must be paid (charges only)
+- **Logic**: Payment deadline for the charge
+- **Use case**: Determine if charges are current, past due, or future
+
+### Transaction Sorting
+
+- **Primary Sort**: By `transaction_date` in descending order (most recent first)
+- **Secondary Sort**: By `created_at` for transactions on the same date
+- **Result**: Chronological timeline with newest transactions at the top
+
+## Collections Logic
+
+### Collections Status Determination
+
+**NOT_IN_COLLECTIONS**
+- All charges are paid or within grace period
+- No outstanding balances past due threshold
+- Account is considered current
+
+**IN_COLLECTIONS**
+- Outstanding balance exceeds grace period (typically 30-60 days)
+- Account has been flagged for collections processing
+- May include additional collection fees or penalties
+
+### Collections Information Fields
+
+**Status Changed At (`status_changed_at`)**
+- **Purpose**: When the collections status last changed
+- **Logic**: Timestamp of status transition
+- **Null values**: Indicates status has never changed from default
+
+**Reason (`reason`)**
+- **Purpose**: Business reason for collections status
+- **Logic**: Human-readable explanation for status change
+- **Common reasons**: "Outstanding balance over 60 days past due", "Multiple late payments"
+
+## Charge Posting Logic
+
+### Charge Code Scope
+
+**Charge Code (`charge_code`)**
+- **Scope**: Per property/organization level
+- **Logic**: Charge codes are defined and validated within the context of a specific property
+- **Validation**: Each property can have its own set of valid charge codes
+- **Use case**: Different properties may use different charge code schemes (e.g., "RENT" vs "MONTHLY_RENT")
+
+### Due Date Rules
+
+**Due Date (`due_date`) Calculation**
+- **Monthly Charges**: Default to the 1st of the month following the charge date
+- **Final Charges**: Use the actual move-out date when applicable
+- **Custom Due Dates**: Can be explicitly set in the charge creation request
+- **Logic**: Due date determines when charges appear in `balance_due` vs `total_balance`
+
+**Examples**:
+- Charge date: 2024-02-01 → Due date: 2024-03-01 (monthly charge)
+- Charge date: 2024-02-15, move-out: 2024-02-20 → Due date: 2024-02-20 (final charge)
+
+## Batch Operations Logic
+
+### Idempotency and External IDs
+
+**External Charge ID (`external_charge_id`)**
+- **Purpose**: Prevent duplicate transactions and ensure idempotency
+- **Scope**: Must be unique per property
+- **Logic**: System checks for existing external IDs before creating new transactions
+- **Format**: User-defined string (recommend descriptive format like "water_jan24_unit2a")
+
+**Skip Duplicates Behavior**
+- **Default**: `skip_duplicates=true`
+- **When true**: Duplicates are skipped without HTTP errors
+- **Result**: Skipped charges appear in `total_skipped` count with `success=false` in results
+- **When false**: Duplicate external IDs cause HTTP 409 Conflict errors
+- **Use case**: Retry failed requests without creating duplicate transactions
+
+**ID Distinction**
+- **`charge_id`**: Internal EliseAI-generated UUID (e.g., "018e2b7d-7b7e-7000-8000-000000000001")
+- **`external_charge_id`**: User-provided identifier for idempotency (e.g., "water_jan24_unit2a")
+- **Relationship**: One external_charge_id maps to one charge_id, but charge_id is system-generated
+
+### Batch Size Limits
+
+**Maximum Batch Size**: 100 charges per request
+- **Enforcement**: HTTP 400 error if batch exceeds 100 items
+- **Rationale**: Prevents timeouts and ensures reliable processing
+- **Workaround**: Split large batches into multiple requests
+- **Negotiability**: Currently fixed limit, not configurable per request
+
+### Batch Processing Results
+
+**Success Tracking**
+- **Total Requested**: Number of items in the batch request
+- **Total Created/Processed**: Number of items successfully processed
+- **Total Skipped**: Number of duplicates skipped (when skip_duplicates=true)
+- **Total Failed**: Number of items that failed processing
+
+**Individual Results**
+- Each item in the batch gets a detailed result showing success/failure
+- Failed items include error messages explaining the failure
+- Successful items include the generated internal IDs
+
+## Payment Allocation Logic
+
+### Automatic Allocation
+
+**Payment Processing**
+- Payments are automatically allocated to outstanding charges
+- Allocation follows standard accounting rules (FIFO, oldest charges first)
+- Partial payments are tracked per charge using the `balance` field
+
+**Payment Status**
+- Payments are created in "SUCCEEDED" status
+- Failed payments are not created in the ledger
+- Payment reversals create REVERSAL transactions
+
+### Charge-Payment Relationship
+
+**Balance Calculation**
+- Charge balance = Original amount - Allocated payments
+- Multiple payments can be applied to a single charge
+- Single payment can be split across multiple charges
+
+## Charge Voiding Logic
+
+**Charge Reversal Process**
+- **Method**: Use batch charge reversal endpoint (`/properties/{property_id}/charges/reverse/batch`)
+- **Result**: Creates an ADJUSTMENT transaction with `adjustment_type="CREDIT"`
+- **Balance Impact**: Reduces total balance by the voided charge amount
+- **Audit Trail**: Original charge remains in transaction history, reversal is linked via external IDs
+- **Idempotency**: Use `external_reversal_id` to prevent duplicate reversals
+
+**Voiding Behavior**
+- **Immediate Effect**: Voided charges are immediately removed from balance calculations
+- **Transaction History**: Both original charge and reversal appear in transaction list
+- **Collections Impact**: May affect collections status if voiding reduces balance below threshold
+- **Partial Voids**: Not supported - charges must be voided in full
+
+## Immediate Posting Confirmation
+
+**Real-Time Processing**
+- **Charges**: Posted immediately upon successful API call
+- **Payments**: Applied immediately and allocated to outstanding charges
+- **Adjustments**: Take effect immediately
+- **No Sync Required**: No additional synchronization steps needed
+- **Balance Updates**: All balance calculations are updated in real-time
+- **API Consistency**: Subsequent API calls immediately reflect the changes
+
+## Data Validation Rules
+
+### Required Fields
+
+**All Transactions**
+- `id`, `lease_id`, `transaction_type`, `amount`, `description`, `transaction_date`
+- `created_at`, `updated_at`
+
+**Charges Only**
+- `charge_code`, `charge_type`, `due_date`
+
+**Payments Only**
+- `payment_method`
+
+**Adjustments Only**
+- `adjustment_type`
+
+### Amount Validation
+
+- All amounts must be positive (> 0)
+- Amounts are stored as Decimal for precision
+- Currency is assumed to be USD unless specified
+
+### Date Validation
+
+- `transaction_date` cannot be in the future (except for future charges)
+- `due_date` must be on or after `transaction_date` for charges
+- `created_at` and `updated_at` are system-managed timestamps
+
+## ID Format Rules
+
+- **Transaction IDs**: UUID format (e.g., "018e2b7d-7b7e-7000-8000-000000000001")
+- **Lease IDs**: UUID format (e.g., "018e2b7d-6a5d-7000-8000-000000000002")
+- **Account IDs**: UUID format (e.g., "account_12345")
+- **Property IDs**: Numeric values without prefixes
+- **External IDs**: User-defined strings for idempotency
+
+## Query Parameters Logic
+
+### Include Paid Charges (`include_paid_charges`)
+
+**Default: false**
+- Only returns transactions for charges with outstanding balances
+- Focuses on current financial obligations
+- Reduces response size for accounts with extensive history
+
+**When true**
+- Returns full transaction history within the time window
+- Includes fully paid charges and all transaction types
+- Provides complete audit trail
+
+### History Days (`history_days`)
+
+**Default: 60, Maximum: 360**
+- Controls how far back to look when `include_paid_charges=true`
+- Only affects the time window for historical data
+- Current outstanding charges are always included regardless of age
+
+## Business Logic and Data Synchronization
+
+### External System Integration
+
+- EliseAI integrates with multiple property management systems
+- Financial data is synchronized regularly to ensure accuracy
+- Transaction data may be imported from external systems or created via API
+
+### Data Freshness
+
+- Ledger data is updated in real-time as transactions occur
+- Balance calculations are recalculated immediately when transactions are added/modified
+- Historical data is preserved for audit purposes
+
+### Audit Trail
+
+- All transactions include creation and modification timestamps
+- Transaction reversals maintain references to original transactions
+- External IDs provide traceability to source systems
+
+## Important Notes for API Users
+
+### Currently Populated Fields
+
+- **All transaction fields**: Fully populated with real data
+- **Balance calculations**: Accurate and up-to-date
+- **Collections status**: Actively maintained
+- **Payment allocation**: Automatic and accurate
+
+### Data Consistency
+
+- Balance calculations are always consistent across all endpoints
+- Transaction amounts are stored with high precision (Decimal)
+- Date fields use ISO 8601 format with timezone information
+
+### Error Handling
+
+- Batch operations provide detailed error information for failed items
+- Individual transaction failures don't affect other items in the batch
+- Duplicate external IDs are handled gracefully with skip_duplicates option
+
+### Performance Considerations
+
+- Use `include_paid_charges=false` for better performance when only current balances are needed
+- Limit `history_days` to reduce response size for accounts with extensive history
+- Batch operations are more efficient than individual API calls for bulk operations
+

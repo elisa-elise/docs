@@ -1,49 +1,12 @@
 ---
 title: "Leases"
-description: "Description of your new file."
 ---
-
 
 ## Overview
 
-The EliseAI Leasing API provides comprehensive access to lease agreements, resident information, and occupancy data for property management operations. This documentation explains the key endpoints, data models, and business logic that vendors need to understand when integrating with our leasing system.
+This documentation explains the business logic and key field meanings for the EliseAI Leasing API. It focuses on understanding the data returned by the `/v2/leases/properties/{property_id}/leases` endpoint and the logic behind status values, dates, and relationships.
 
-## Base URL
-
-```
-https://api.eliseai.com/v2/leases
-```
-
-## Authentication
-
-All endpoints require API key authentication via the `Authorization` header:
-
-```
-Authorization: Bearer YOUR_API_KEY
-```
-
-## Primary Endpoint
-
-### GET `/properties/{property_id}/leases`
-
-Retrieves a paginated list of leases with their associated members (residents) for a specific property.
-
-**URL Parameters:**
-
-- `property_id` (string): The property/building ID (numeric, no prefix)
-
-**Query Parameters:**
-
-- `limit` (integer, optional): Number of leases to return (1-500, default: 100)
-- `offset` (integer, optional): Number of leases to skip for pagination (default: 0)
-- `status` (string, optional): Filter by lease status
-- `unit_id` (string, optional): Filter by unit ID (with 'u\_' prefix)
-- `lease_start_date_from` (date, optional): Filter leases starting on or after this date
-- `lease_start_date_to` (date, optional): Filter leases starting on or before this date
-- `lease_end_date_from` (date, optional): Filter leases ending on or after this date
-- `lease_end_date_to` (date, optional): Filter leases ending on or before this date
-
-## Data Models and Business Logic
+## Key Field Logic and Business Rules
 
 ### Lease Status Values
 
@@ -94,22 +57,61 @@ The `occupant_type` field defines a person's relationship to the lease:
 
 ### Date Fields Logic
 
-#### Move-In Date (`move_in_date`)
+#### Lease-Level Dates (on the `lease` object)
 
-- **Purpose**: When the resident actually moved into the unit
-- **Logic**: This may differ from the lease start date if there were delays or early move-ins
-- **Null values**: Indicates the person hasn't moved in yet (Future residents, Applicants)
+**`Move-In Date (move_in_date)`**
 
-#### Move-Out Date (`move_out_date`)
+- **Purpose**: Actual move-in date for the lease
+- **Logic**: If different lease members move in at different dates, this will be the **earliest** move-in date
+- **Null values**: Indicates no one has moved in yet (Future residents, Applicants)
+- **Use case**: Track when the lease actually became active
 
-- **Purpose**: When the resident actually moved out of the unit
-- **Logic**: Set when the person physically vacates the unit
-- **Null values**: Indicates the person is still living in the unit
+**`Move-Out Date (move_out_date)`**
+
+- **Purpose**: Actual move-out date for the lease
+- **Logic**: If different lease members move out at different dates, this will be the **latest** move-out date
+- **Null values**: Indicates residents are still living in the unit
+- **Use case**: Track when the lease actually ended
+
+**`Expected Move-In Date (expected_move_in_date)`**
+
+- **Purpose**: Expected move-in date for the lease
+- **Logic**: If different lease members are expected to move in at different dates, this will be the **earliest** expected move-in date
+- **Use case**: Compare planned vs actual move-ins, track delays or early arrivals
+- **Note**: May differ from actual move-in date due to delays or early move-ins
+
+**`Expected Move-Out Date (expected_move_out_date)`**
+
+- **Purpose**: Expected move-out date for the lease
+- **Logic**: If different lease members are expected to move out at different dates, this will be the **latest** expected move-out date
+- **Use case**: Compare planned vs actual move-outs, track extensions or early departures
+- **Note**: May differ from actual move-out date due to lease extensions or early terminations
+
+**`Lease Signed At (lease_signed_at)`**
+
+- **Purpose**: Date and time when the lease was signed by all parties
+- **Logic**: Includes both resident signatures and property manager/owner counter-signatures
+- **Format**: ISO 8601 datetime with timezone
+- **Use case**: Track lease execution timeline, determine when lease became legally binding
+
+#### Member-Level Dates (on each `member` object)
+
+**`Move-In Date (move_in_date)`**
+
+- **Purpose**: When this specific resident moved into the unit
+- **Logic**: Individual resident's actual move-in date
+- **Null values**: Indicates this person hasn't moved in yet
+
+**`Move-Out Date (move_out_date)`**
+
+- **Purpose**: When this specific resident moved out of the unit
+- **Logic**: Individual resident's actual move-out date
+- **Null values**: Indicates this person is still living in the unit
 - **Validation**: Must be on or after the move-in date
 
-#### Notice Date (`notice_date`)
+**`Notice Date (notice_date)`**
 
-- **Purpose**: When the resident provided notice to vacate
+- **Purpose**: When this resident provided notice to vacate
 - **Logic**: Typically 30-60 days before the move-out date, depending on lease terms
 - **Null values**: Indicates no notice has been given yet
 - **Validation**: Should be before the move-out date
@@ -119,20 +121,19 @@ The `occupant_type` field defines a person's relationship to the lease:
 - **Start Date**: When the lease agreement begins
 - **End Date**: When the lease agreement ends (null for month-to-month leases)
 
+### Current Occupant Logic
+
+**`Is Current Occupant (is_current_occupant)`**
+
+- **Purpose**: Boolean flag indicating if this resident is currently occupying the unit
+- **Logic**: Calculated based on resident status and occupant type:
+  - `true` if resident status is: RESIDENT, RENEWING, NOTICE, or UNDER_EVICTION
+  - AND occupant type is: PRIMARY, ROOMMATE, DEPENDENT, or OTHER
+  - `false` for GUARANTOR (they don't live in the unit) or inactive statuses
+
 ### Renter's Insurance Information
 
-The `renters_insurance` object contains policy details:
-
-```json
-{
-  "required": true,
-  "provider": "State Farm",
-  "policy_number": "SF-123456789",
-  "coverage_amount": 100000,
-  "expiration_date": "2025-01-01",
-  "status": "active"
-}
-```
+The `renters_insurance` object contains policy details (currently not populated in responses):
 
 **Status Values:**
 
@@ -142,102 +143,75 @@ The `renters_insurance` object contains policy details:
 - `cancelled`: Policy was cancelled
 - `not_required`: Insurance is not required for this lease
 
-## Response Structure
+### Phone Numbers
 
-### Complete Response Example
+**`Phone Numbers (phone_numbers)`**
 
-```json
-{
-  "leases": [
-    {
-      "lease": {
-        "id": "lease_550e8400-e29b-41d4-a716-446655440000",
-        "unit_id": "u_12345",
-        "unit_number": "2A",
-        "status": "Current",
-        "is_month_to_month": false,
-        "lease_term": {
-          "start_date": "2024-01-01",
-          "end_date": "2024-12-31"
-        },
-        "deleted_at": null
-      },
-      "members": [
-        {
-          "resident": {
-            "id": "res_a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-            "first_name": "Emma",
-            "last_name": "Johnson",
-            "email": "emma.johnson@example.com"
-          },
-          "resident_status": "RESIDENT",
-          "occupant_type": "PRIMARY",
-          "move_in_date": "2024-01-01",
-          "move_out_date": "2025-01-01",
-          "notice_date": "2024-11-01",
-          "renters_insurance": {
-            "required": true,
-            "provider": "State Farm",
-            "policy_number": "SF-123456789",
-            "coverage_amount": 100000,
-            "expiration_date": "2025-01-01",
-            "status": "active"
-          }
-        }
-      ]
-    }
-  ],
-  "pagination": {
-    "total": 45,
-    "limit": 100,
-    "offset": 0
-  }
-}
-```
+- **Purpose**: List of resident's phone numbers with type classification
+- **Format**: E.164 format (e.g., "+14155552671")
+- **Types**: HOME, MOBILE, WORK, OTHER
+- **Note**: Currently not populated in API responses
 
-## Common Use Cases
+### Contact Address Logic
 
-### 1. Get All Active Leases
+**Resident Contact Address**
 
-```bash
-GET /properties/12345/leases?lease_end_date_from=2024-01-01
-```
+- **Purpose**: The address used for contacting residents
+- **Current Logic**: Resident contact address is their unit address
+- **Implementation**: EliseAI currently does not provide a separate mailing address different from the unit address
+- **Use Case**: All correspondence, mail, and contact should be directed to the unit address where the resident lives
 
-### 2. Get Leases for a Specific Unit
+### Lease Transfers and Takeovers
 
-```bash
-GET /properties/12345/leases?unit_id=u_12345
-```
+**Lease Transfers (Onsite Transfers)**
 
-### 3. Get Leases Starting This Year
+- **Current Status**: EliseAI does not currently expose a dedicated field for lease transfers
+- **Future Plans**: A transfer field will be added in future API versions
+- **How to Identify Transfers**: Look for the same `resident_id` appearing on different leases
+- **Logic**: When a resident transfers from one unit to another, they maintain the same resident ID but appear on a new lease
+- **Use Case**: Track residents who move between units within the same property
 
-```bash
-GET /properties/12345/leases?lease_start_date_from=2024-01-01&lease_start_date_to=2024-12-31
-```
+**Lease Takeovers**
 
-### 4. Get Only Current Leases
+- **Definition**: When a new resident takes over an existing lease
+- **Lease ID Behavior**: The same `lease_id` is maintained (lease doesn't change)
+- **Status Changes**:
+  - Prior primary resident status changes to FORMER
+  - New resident is promoted to PRIMARY status
+- **Move-In Date Behavior**:
+  - New primary resident's `move_in_date` reflects when they took over
+  - Prior resident's `move_out_date` reflects when they moved out
+  - Lease-level dates may be updated to reflect the takeover timeline
+- **Use Case**: Track when leases are transferred between residents without creating new lease agreements
 
-```bash
-GET /properties/12345/leases?status=Current
-```
+## Key Field Relationships
 
-### 5. Get Leases with Notice Given
+### Lease vs Member Date Logic
 
-```bash
-GET /properties/12345/leases?status=Notice
-```
+- **Lease-level dates** represent the overall lease timeline
+- **Member-level dates** represent individual resident timelines
+- Lease dates are calculated from member dates (earliest move-in, latest move-out)
+- A lease can have multiple members with different move-in/out dates
 
-## Data Synchronization Notes
+### Status Relationships
 
-### External System Integration
+- **Lease status** reflects the overall state of the lease agreement
+- **Resident status** reflects individual resident's state within that lease
+- Lease status is determined by the highest priority resident status on the lease
+- Multiple residents can have different statuses on the same lease
 
-- EliseAI integrates with multiple property management systems (Progress, RealPage, AMH, MRI, Yardi, etc.)
-- Each system maps their status values to EliseAI's standard enums
-- Data is synchronized regularly to ensure accuracy
+### Occupant Type vs Current Occupant
+
+- **Occupant type** defines the resident's relationship to the lease (PRIMARY, ROOMMATE, etc.)
+- **Is current occupant** indicates if they're physically living in the unit
+- GUARANTOR occupant type will always have `is_current_occupant: false`
+- DEPENDENT occupant type can have `is_current_occupant: true` if they're living there
+
+## Business Logic and Data Synchronization
 
 ### Status Priority Logic
 
-When multiple residents have different statuses on the same lease, EliseAI uses a priority system:
+When multiple residents have different statuses on the same lease, EliseAI uses a priority system to determine the overall lease status:
 
  1. RESIDENT (highest priority)
  2. NOTICE
@@ -250,41 +224,55 @@ When multiple residents have different statuses on the same lease, EliseAI uses 
  9. CANCELLED
 10. WAITLIST (lowest priority)
 
+### External System Integration
+
+- EliseAI integrates with multiple property management systems (Progress, RealPage, AMH, MRI, Yardi, etc.)
+- Each system maps their status values to EliseAI's standard enums
+- Data is synchronized regularly to ensure accuracy
+- Status values may vary between systems but are normalized to EliseAI's standard values
+
 ### Data Freshness
 
 - Lease data is updated in real-time as changes occur
 - Resident status changes are reflected immediately
 - Historical data is preserved for audit purposes
 
-## Error Handling
+### ID Format Rules
 
-### Common HTTP Status Codes
+- **Lease IDs**: Always start with `lease_` prefix
+- **Unit IDs**: Always start with `u_` prefix
+- **Resident IDs**: Always start with `res_` prefix
+- **Property IDs**: Numeric values without prefixes
 
-- `200`: Success
-- `400`: Bad request - invalid parameters
-- `401`: Unauthorized - invalid or missing API key
-- `403`: Forbidden - insufficient permissions
-- `404`: Not found - resource doesn't exist
-- `422`: Unprocessable entity - validation error
-- `500`: Internal server error
+### Month-to-Month Logic
 
-### Error Response Format
+- **`is_month_to_month`**: Boolean indicating if lease automatically renews monthly
+- **`end_date`**: Will be `null` for month-to-month leases
+- **Renewal**: Month-to-month leases continue indefinitely until notice is given
 
-```json
-{
-  "detail": "Error message describing what went wrong"
-}
-```
+### Soft Deletion
 
-## Best Practices
+- **`deleted_at`**: Timestamp when lease was soft-deleted (null if active)
+- **Logic**: Soft-deleted leases are excluded from most queries but preserved for historical purposes
 
-1. **Pagination**: Always use pagination for large datasets to avoid timeouts
-2. **Filtering**: Use date filters to limit data to relevant time periods
-3. **Status Filtering**: Filter by specific statuses when you only need certain lease types
-4. **Rate Limiting**: Respect API rate limits to avoid throttling
-5. **Error Handling**: Implement proper error handling for all possible status codes
-6. **Data Validation**: Validate date relationships (move-in before move-out, notice before move-out)
+## Important Notes for API Users
 
-## Support
+### Currently Unpopulated Fields
 
-For technical support or questions about the Leasing API, please contact the EliseAI integration team.
+- **`renters_insurance`**: Always `null` in current API responses
+- **`phone_numbers`**: Always empty array in current API responses
+- These fields are defined in the schema but not yet populated with real data
+
+### Data Validation Rules
+
+- Move-out date must be on or after move-in date
+- Notice date should be before move-out date
+- Lease end date must be after start date
+- All ID fields must follow the required prefix format
+
+### Status Transition Logic
+
+- Residents typically progress: APPLICANT → FUTURE → RESIDENT → NOTICE → FORMER
+- Leases can be CANCELLED at any point before completion
+- Eviction process: RESIDENT → UNDER_EVICTION → EVICTED
+- Collections status is independent of resident status
