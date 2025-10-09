@@ -1,0 +1,543 @@
+---
+title: "EliseAI Ledger API - Common Workflows"
+---
+
+## Overview
+
+This page provides practical examples and common workflows for **vendors integrating with EliseAI's ledger system**. EliseAI provides the ledger software to property managers, and vendors use these APIs to process payments, handle collections, manage charges, and integrate with EliseAI's financial transaction system.
+
+## Table of Contents
+
+ 1. [Payment Processing Integration](#payment-processing-integration)
+ 2. [Collections Agency Integration](#collections-agency-integration)
+ 3. [Utility Provider Integration](#utility-provider-integration)
+ 4. [Property Management System Integration](#property-management-system-integration)
+ 5. [Payment Gateway Integration](#payment-gateway-integration)
+ 6. [Late Fee Processing](#late-fee-processing)
+ 7. [Move-Out Processing](#move-out-processing)
+ 8. [Charge Management](#charge-management)
+ 9. [Account Reconciliation](#account-reconciliation)
+10. [Error Handling & Retry Logic](#error-handling--retry-logic)
+
+## Payment Processing Integration
+
+### Workflow: Payment Gateway Integration
+
+**Use Case**: Payment processor needs to record successful payments in EliseAI's ledger
+
+**Scenario**: Resident pays rent through payment gateway, gateway needs to update EliseAI ledger
+
+**API Call**:
+
+```http
+POST /v2/ledger/properties/{property_id}/payments/batch
+```
+
+**Request Body**:
+
+```json
+{
+  "payments": [
+    {
+      "lease_id": "lease_12345",
+      "amount": 1250.00,
+      "payment_date": "2024-02-15",
+      "payment_method": "ACH",
+      "external_payment_id": "gateway_pmt_abc123_def456",
+      "description": "Rent payment via PaymentGateway Pro"
+    }
+  ],
+  "skip_duplicates": true
+}
+```
+
+**Integration Flow**:
+
+1. Resident initiates payment through vendor's gateway
+2. Gateway processes payment successfully
+3. Gateway calls EliseAI API to record payment
+4. EliseAI automatically allocates payment to outstanding charges
+5. Gateway receives confirmation of successful ledger update
+
+**Response Analysis**:
+
+```json
+{
+  "total_requested": 1,
+  "total_created": 1,
+  "total_skipped": 0,
+  "total_failed": 0,
+  "results": [
+    {
+      "external_payment_id": "gateway_pmt_abc123_def456",
+      "payment_id": "pay_ghi789",
+      "success": true,
+      "error": null
+    }
+  ]
+}
+```
+
+**Key Integration Points**:
+
+- Use unique external_payment_id from your system
+- EliseAI handles payment allocation automatically
+- Set `skip_duplicates=true` for retry safety
+- Payment appears in ledger immediately
+
+## Collections Agency Integration
+
+### Workflow: Collections Agency Account Monitoring
+
+**Use Case**: Collections agency needs to monitor accounts assigned to them
+
+**Scenario**: Collections agency receives accounts from property manager, needs to track payment status
+
+**API Call**:
+
+```http
+GET /v2/ledger/properties/{property_id}/accounts/{account_id}/summary
+```
+
+**Request Parameters**:
+
+- `include_paid_charges=true` - Get full payment history
+- `history_days=90` - Extended history for collections analysis
+
+**Response Analysis**:
+
+```json
+{
+  "lease_id": "lease_12345",
+  "balance_due": 3750.00,
+  "total_balance": 3750.00,
+  "collections": {
+    "status": "IN_COLLECTIONS",
+    "status_changed_at": "2024-01-15T10:30:00Z",
+    "reason": "Outstanding balance over 60 days past due"
+  },
+  "transactions": [
+    {
+      "transaction_type": "CHARGE",
+      "amount": 1250.00,
+      "description": "Monthly rent - January 2024",
+      "due_date": "2024-02-01",
+      "balance": 1250.00
+    },
+    {
+      "transaction_type": "CHARGE", 
+      "amount": 1250.00,
+      "description": "Monthly rent - December 2023",
+      "due_date": "2024-01-01",
+      "balance": 1250.00
+    },
+    {
+      "transaction_type": "CHARGE",
+      "amount": 50.00,
+      "description": "Late fee - December rent",
+      "due_date": "2024-01-05",
+      "balance": 50.00
+    }
+  ]
+}
+```
+
+**Collections Agency Workflow**:
+
+1. Query account summary to get current status
+2. Analyze `balance_due` and `total_balance`
+3. Review `collections.reason` for context
+4. Check transaction history for payment patterns
+5. Take appropriate collection actions
+6. Record any payments received through your system
+
+**Key Integration Points**:
+
+- Monitor `collections.status` changes
+- Track `balance_due` for immediate collection targets
+- Use `history_days` parameter for extended analysis
+- Record payments via payment batch API when received
+
+## Utility Billing
+
+### Workflow: Post Utility Charges
+
+**Use Case**: Bill residents for utilities (water, sewer, trash, etc.)
+
+**API Call**:
+
+```http
+POST /v2/ledger/properties/{property_id}/charges/batch
+```
+
+**Request Body**:
+
+```json
+{
+  "charges": [
+    {
+      "lease_id": "lease_12345",
+      "amount": 45.50,
+      "charge_code": "WATER",
+      "description": "Water & Sewer - January 2024",
+      "charge_date": "2024-02-01",
+      "external_charge_id": "water_jan2024_lease_12345"
+    },
+    {
+      "lease_id": "lease_12345",
+      "amount": 25.00,
+      "charge_code": "TRASH",
+      "description": "Trash Collection - January 2024",
+      "charge_date": "2024-02-01",
+      "external_charge_id": "trash_jan2024_lease_12345"
+    }
+  ],
+  "skip_duplicates": true
+}
+```
+
+**Charge Code Mapping**:
+
+- `WATER` → `charge_type: "UTILITIES"`
+- `TRASH` → `charge_type: "UTILITIES"`
+- `ELECTRIC` → `charge_type: "UTILITIES"`
+- `GAS` → `charge_type: "UTILITIES"`
+
+**Due Date Logic**:
+
+- Utility charges typically due 30 days after charge date
+- January utilities (charge_date: 2024-02-01) → due_date: 2024-03-01
+
+## Payment Processing
+
+### Workflow: Record Resident Payments
+
+**Use Case**: Record payments received from residents
+
+**API Call**:
+
+```http
+POST /v2/ledger/properties/{property_id}/payments/batch
+```
+
+**Request Body**:
+
+```json
+{
+  "payments": [
+    {
+      "lease_id": "lease_12345",
+      "amount": 1250.00,
+      "payment_date": "2024-02-15",
+      "payment_method": "ACH",
+      "external_payment_id": "pmt_feb2024_lease_12345",
+      "description": "February 2024 rent payment"
+    }
+  ],
+  "skip_duplicates": true
+}
+```
+
+**Payment Allocation**:
+
+- Payments automatically allocated to oldest outstanding charges first (FIFO)
+- Partial payments tracked per charge using `balance` field
+- Multiple payments can be applied to single charge
+- Single payment can be split across multiple charges
+
+**Response Analysis**:
+
+```json
+{
+  "total_requested": 1,
+  "total_created": 1,
+  "total_skipped": 0,
+  "total_failed": 0,
+  "results": [
+    {
+      "external_payment_id": "pmt_feb2024_lease_12345",
+      "payment_id": "pay_def456",
+      "success": true,
+      "error": null
+    }
+  ]
+}
+```
+
+## Late Fee Management
+
+### Workflow: Apply Late Fees
+
+**Use Case**: Charge late fees for overdue payments
+
+**API Call**:
+
+```http
+POST /v2/ledger/properties/{property_id}/charges/batch
+```
+
+**Request Body**:
+
+```json
+{
+  "charges": [
+    {
+      "lease_id": "lease_12345",
+      "amount": 50.00,
+      "charge_code": "LATE_FEE",
+      "description": "Late fee - February rent overdue",
+      "charge_date": "2024-03-05",
+      "external_charge_id": "late_fee_mar2024_lease_12345"
+    }
+  ],
+  "skip_duplicates": true
+}
+```
+
+**Late Fee Logic**:
+
+- `charge_code: "LATE_FEE"` → `charge_type: "LATE_FEE"`
+- Due immediately (due_date = charge_date)
+- Appears in `balance_due` immediately
+
+**Late Fee Calculation**:
+
+- Typically 5-10% of overdue amount
+- Applied after grace period (usually 3-5 days)
+- Can be recurring (monthly) or one-time
+
+## Move-Out Final Billing
+
+### Workflow: Final Move-Out Charges
+
+**Use Case**: Bill final charges when resident moves out
+
+**API Call**:
+
+```http
+POST /v2/ledger/properties/{property_id}/charges/batch
+```
+
+**Request Body**:
+
+```json
+{
+  "charges": [
+    {
+      "lease_id": "lease_12345",
+      "amount": 200.00,
+      "charge_code": "CLEANING",
+      "description": "Move-out cleaning fee",
+      "charge_date": "2024-02-20",
+      "external_charge_id": "cleaning_final_lease_12345"
+    },
+    {
+      "lease_id": "lease_12345",
+      "amount": 150.00,
+      "charge_code": "DAMAGE",
+      "description": "Carpet damage repair",
+      "charge_date": "2024-02-20",
+      "external_charge_id": "damage_carpet_lease_12345"
+    }
+  ],
+  "skip_duplicates": true
+}
+```
+
+**Final Billing Logic**:
+
+- Due date = actual move-out date
+- Charges appear in `balance_due` immediately
+- Security deposit may offset final charges
+
+## Charge Corrections
+
+### Workflow: Void Incorrect Charges
+
+**Use Case**: Reverse charges that were posted in error
+
+**API Call**:
+
+```http
+POST /v2/ledger/properties/{property_id}/charges/reverse/batch
+```
+
+**Request Body**:
+
+```json
+{
+  "reversals": [
+    {
+      "external_charge_id": "water_jan2024_lease_12345",
+      "reason": "Duplicate charge posted in error",
+      "external_reversal_id": "reversal_water_jan2024_lease_12345"
+    }
+  ],
+  "skip_duplicates": true
+}
+```
+
+**Voiding Process**:
+
+- Creates ADJUSTMENT transaction with `adjustment_type: "CREDIT"`
+- Reduces total balance by voided amount
+- Original charge remains in transaction history
+- Reversal linked via external IDs
+
+**Response Analysis**:
+
+```json
+{
+  "total_requested": 1,
+  "total_processed": 1,
+  "total_skipped": 0,
+  "total_failed": 0,
+  "results": [
+    {
+      "external_charge_id": "water_jan2024_lease_12345",
+      "external_reversal_id": "reversal_water_jan2024_lease_12345",
+      "adjustment_id": "adj_ghi789",
+      "success": true,
+      "error": null
+    }
+  ]
+}
+```
+
+## Collections Management
+
+### Workflow: Monitor Collections Status
+
+**Use Case**: Check which accounts are in collections
+
+**API Call**:
+
+```http
+GET /v2/ledger/properties/{property_id}/accounts/{account_id}/summary
+```
+
+**Collections Status Analysis**:
+
+```json
+{
+  "collections": {
+    "status": "IN_COLLECTIONS",
+    "status_changed_at": "2024-01-15T10:30:00Z",
+    "reason": "Outstanding balance over 60 days past due"
+  }
+}
+```
+
+**Collections Triggers**:
+
+- Outstanding balance exceeds grace period (typically 30-60 days)
+- Multiple late payments
+- Failed payment attempts
+
+**Collections Workflow**:
+
+1. Monitor `collections.status` in account summaries
+2. Identify accounts with `status: "IN_COLLECTIONS"`
+3. Review `reason` field for collection trigger
+4. Take appropriate collection actions
+
+## Batch Operations
+
+### Workflow: Large-Scale Batch Processing
+
+**Use Case**: Process hundreds of charges efficiently
+
+**Strategy**: Split large batches into chunks of 100
+
+**Example Implementation**:
+
+```python
+def process_large_batch(charges, property_id):
+    batch_size = 100
+    results = []
+    
+    for i in range(0, len(charges), batch_size):
+        batch = charges[i:i + batch_size]
+        
+        response = create_batch_charges(
+            property_id=property_id,
+            charges=batch,
+            skip_duplicates=True
+        )
+        
+        results.append(response)
+        
+        # Check for failures
+        if response.total_failed > 0:
+            failed_charges = [
+                r for r in response.results 
+                if not r.success
+            ]
+            # Handle failed charges
+            handle_failed_charges(failed_charges)
+    
+    return results
+```
+
+**Best Practices**:
+
+- Always use `skip_duplicates=true` for retry safety
+- Process failed items separately
+- Monitor `total_failed` count
+- Implement retry logic for transient failures
+
+## Error Handling
+
+### Workflow: Handle API Errors
+
+**Common Error Scenarios**:
+
+**1. Duplicate External IDs**
+
+```json
+{
+  "external_charge_id": "rent_feb2024_lease_12345",
+  "charge_id": null,
+  "success": false,
+  "error": "Charge with external_charge_id already exists"
+}
+```
+
+**2. Invalid Lease ID**
+
+```json
+{
+  "detail": "Lease not found"
+}
+```
+
+**3. Batch Size Exceeded**
+
+```json
+{
+  "detail": "Batch exceeds maximum size of 100 charges"
+}
+```
+
+**Error Handling Strategy**:
+
+```python
+def handle_batch_response(response):
+    if response.total_failed > 0:
+        failed_items = [r for r in response.results if not r.success]
+        
+        for item in failed_items:
+            if "already exists" in item.error:
+                # Duplicate - log and continue
+                logger.info(f"Duplicate skipped: {item.external_charge_id}")
+            elif "not found" in item.error:
+                # Invalid data - requires investigation
+                logger.error(f"Invalid lease: {item.external_charge_id}")
+            else:
+                # Other error - retry or investigate
+                logger.error(f"Failed: {item.external_charge_id} - {item.error}")
+    
+    return response
+```
+
+## 

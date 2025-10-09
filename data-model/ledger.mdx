@@ -8,6 +8,14 @@ This documentation explains the business logic and key field meanings for the El
 
 ## Key Field Logic and Business Rules
 
+### ID Format Rules
+
+- **Transaction IDs**: UUID format (e.g., "018e2b7d-7b7e-7000-8000-000000000001")
+- **Lease IDs**: UUID format (e.g., "018e2b7d-6a5d-7000-8000-000000000002")
+- **Account IDs**: UUID format (e.g., "account_12345")
+- **Property IDs**: Numeric values without prefixes
+- **External IDs**: User-defined strings for idempotency
+
 ### Transaction Types
 
 The `transaction_type` field indicates the nature of each financial transaction:
@@ -285,113 +293,7 @@ The `collections` object tracks the account's collections status:
 - **Balance Updates**: All balance calculations are updated in real-time
 - **API Consistency**: Subsequent API calls immediately reflect the changes
 
-## Data Validation Rules
-
-### Required Fields
-
-**All Transactions**
-
-- `id`, `lease_id`, `transaction_type`, `amount`, `description`, `transaction_date`
-- `created_at`, `updated_at`
-
-**Charges Only**
-
-- `charge_code`, `charge_type`, `due_date`
-
-**Payments Only**
-
-- `payment_method`
-
-**Adjustments Only**
-
-- `adjustment_type`
-
-### Amount Validation
-
-- All amounts must be positive (\> 0)
-- Amounts are stored as Decimal for precision
-- Currency is assumed to be USD unless specified
-
-### Date Validation
-
-- `transaction_date` cannot be in the future (except for future charges)
-- `due_date` must be on or after `transaction_date` for charges
-- `created_at` and `updated_at` are system-managed timestamps
-
-## ID Format Rules
-
-- **Transaction IDs**: UUID format (e.g., "018e2b7d-7b7e-7000-8000-000000000001")
-- **Lease IDs**: UUID format (e.g., "018e2b7d-6a5d-7000-8000-000000000002")
-- **Account IDs**: UUID format (e.g., "account_12345")
-- **Property IDs**: Numeric values without prefixes
-- **External IDs**: User-defined strings for idempotency
-
-## Query Parameters Logic
-
-### Include Paid Charges (`include_paid_charges`)
-
-**Default: false**
-
-- Only returns transactions for charges with outstanding balances
-- Focuses on current financial obligations
-- Reduces response size for accounts with extensive history
-
-**When true**
-
-- Returns full transaction history within the time window
-- Includes fully paid charges and all transaction types
-- Provides complete audit trail
-
-### History Days (`history_days`)
-
-**Default: 60, Maximum: 360**
-
-- Controls how far back to look when `include_paid_charges=true`
-- Only affects the time window for historical data
-- Current outstanding charges are always included regardless of age
-
-## Business Logic and Data Synchronization
-
-### External System Integration
-
-- EliseAI integrates with multiple property management systems
-- Financial data is synchronized regularly to ensure accuracy
-- Transaction data may be imported from external systems or created via API
-
-### Data Freshness
-
-- Ledger data is updated in real-time as transactions occur
-- Balance calculations are recalculated immediately when transactions are added/modified
-- Historical data is preserved for audit purposes
-
-### Audit Trail
-
-- All transactions include creation and modification timestamps
-- Transaction reversals maintain references to original transactions
-- External IDs provide traceability to source systems
-
-## Important Notes for API Users
-
-### Currently Populated Fields
-
-- **All transaction fields**: Fully populated with real data
-- **Balance calculations**: Accurate and up-to-date
-- **Collections status**: Actively maintained
-- **Payment allocation**: Automatic and accurate
-
-### Data Consistency
-
-- Balance calculations are always consistent across all endpoints
-- Transaction amounts are stored with high precision (Decimal)
-- Date fields use ISO 8601 format with timezone information
-
-### Error Handling
-
-- Batch operations provide detailed error information for failed items
-- Individual transaction failures don't affect other items in the batch
-- Duplicate external IDs are handled gracefully with skip_duplicates option
-
-### Performance Considerations
+## Performance Considerations
 
 - Use `include_paid_charges=false` for better performance when only current balances are needed
 - Limit `history_days` to reduce response size for accounts with extensive history
