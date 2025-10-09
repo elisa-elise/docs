@@ -1,20 +1,30 @@
 ---
-title: "Key Fiels"
-groups: ["ADMIN", "USER"]
+title: "Key Fields"
+groups: ["ADMIN","USER"]
 ---
 
 ## Overview
 
-This documentation explains the business logic and key field meanings for the EliseAI Leasing API. It focuses on understanding the data returned by the `/v2/leases/properties/{property_id}/leases` endpoint and the logic behind fields like statuses values and dates.
+This documentation explains the business logic and key field meanings for the EliseAI Leasing API. It focuses on understanding the data returned by the `/v2/leases/properties/{property_id}/leases` endpoint and the logic behind fields like statuses values and dates. You'll find information on:
+
+- ID Format
+- Lease Status
+- Resident Status
+- Occupant Type
+- Date Fields
+- Occupancy
+- Renter's Insurance Information
+- Resident Contact Information
+- Lease Transfers & Takeovers
 
 ## Key Field Logic and Business Rules
 
-### ID Format Rules
+### ID Format
 
 - **Lease IDs**: Always start with `lease_` prefix
 - **Resident IDs**: Always start with `res_` prefix.
 
-### Lease Status Values
+### Lease Status
 
 The `status` field indicates the current state of a lease agreement:
 
@@ -41,7 +51,7 @@ The `status` field indicates the current state of a lease agreement:
   - Collections status is independent of resident status
 </Info>
 
-### Resident Status Values
+### Resident Status
 
 The `resident_status` field indicates an individual's status within a lease:
 
@@ -67,7 +77,7 @@ The `resident_status` field indicates an individual's status within a lease:
   - Multiple residents can have different statuses on the same lease
 </Info>
 
-### Occupant Type Values
+### Occupant Type
 
 The `occupant_type` field defines a person's relationship to the lease:
 
@@ -88,67 +98,68 @@ The `occupant_type` field defines a person's relationship to the lease:
   - DEPENDENT occupant type can have `is_current_occupant: true` if they're living there
 </Info>
 
-### Date Fields Logic
+### Date Fields
 
-#### Lease-Level Dates (on the `lease` object)
+<AccordionGroup>
+  <Accordion title="Lease Level Dates " description="On the lease object" icon="newspaper" iconType="regular">
+    `Move-In Date (move_in_date)`
 
-**`Move-In Date (move_in_date)`**
+    - **Purpose**: Actual move-in date for the lease
+    - **Logic**: If different lease members move in at different dates, this will be the **earliest** move-in date
+    - **Null values**: Indicates no one has moved in yet (Future residents, Applicants)
 
-- **Purpose**: Actual move-in date for the lease
-- **Logic**: If different lease members move in at different dates, this will be the **earliest** move-in date
-- **Null values**: Indicates no one has moved in yet (Future residents, Applicants)
+    `Move-Out Date (move_out_date)`
 
-**`Move-Out Date (move_out_date)`**
+    - **Purpose**: Actual move-out date for the lease
+    - **Logic**: If different lease members move out at different dates, this will be the **latest** move-out date
+    - **Null values**: Indicates residents are still living in the unit
 
-- **Purpose**: Actual move-out date for the lease
-- **Logic**: If different lease members move out at different dates, this will be the **latest** move-out date
-- **Null values**: Indicates residents are still living in the unit
+    `Expected Move-In Date (expected_move_in_date)`
 
-**`Expected Move-In Date (expected_move_in_date)`**
+    - **Purpose**: Expected move-in date for the lease
+    - **Logic**: If different lease members are expected to move in at different dates, this will be the **earliest** expected move-in date
+    - **Note**: May differ from actual move-in date due to delays or early move-ins
 
-- **Purpose**: Expected move-in date for the lease
-- **Logic**: If different lease members are expected to move in at different dates, this will be the **earliest** expected move-in date
-- **Note**: May differ from actual move-in date due to delays or early move-ins
+    `Expected Move-Out Date (expected_move_out_date)`
 
-**`Expected Move-Out Date (expected_move_out_date)`**
+    - **Purpose**: Expected move-out date for the lease
+    - **Logic**: If different lease members are expected to move out at different dates, this will be the **latest** expected move-out date
+    - **Note**: May differ from actual move-out date due to lease extensions or early terminations
 
-- **Purpose**: Expected move-out date for the lease
-- **Logic**: If different lease members are expected to move out at different dates, this will be the **latest** expected move-out date
-- **Note**: May differ from actual move-out date due to lease extensions or early terminations
+    `Lease Signed At (lease_signed_at)`
 
-**`Lease Signed At (lease_signed_at)`**
+    - **Purpose**: Date and time when the lease was signed by all parties
+    - **Logic**: Includes both resident signatures and property manager/owner counter-signatures
+    - **Format**: ISO 8601 datetime with timezone
+    - **Use case**: Track lease execution timeline, determine when lease became legally binding
 
-- **Purpose**: Date and time when the lease was signed by all parties
-- **Logic**: Includes both resident signatures and property manager/owner counter-signatures
-- **Format**: ISO 8601 datetime with timezone
-- **Use case**: Track lease execution timeline, determine when lease became legally binding
+    #### Lease Term Dates
 
-#### Member-Level Dates (on each `member` object)
+    - `start_date`: When the lease agreement begins
+    - `end_date`: When the lease agreement ends (null for month-to-month leases)
+  </Accordion>
+  <Accordion title="Member Level Dates" description="On each Lease Member object" icon="person-dots-from-line" iconType="regular">
+    `Move-In Date (move_in_date)`
 
-**`Move-In Date (move_in_date)`**
+    - **Purpose**: When this specific resident moved into the unit
+    - **Logic**: Individual resident's actual move-in date
+    - **Null values**: Indicates this person hasn't moved in yet
 
-- **Purpose**: When this specific resident moved into the unit
-- **Logic**: Individual resident's actual move-in date
-- **Null values**: Indicates this person hasn't moved in yet
+    `Move-Out Date (move_out_date)`
 
-**`Move-Out Date (move_out_date)`**
+    - **Purpose**: When this specific resident moved out of the unit
+    - **Logic**: Individual resident's actual move-out date
+    - **Null values**: Indicates this person is still living in the unit
+    - **Validation**: Must be on or after the move-in date
 
-- **Purpose**: When this specific resident moved out of the unit
-- **Logic**: Individual resident's actual move-out date
-- **Null values**: Indicates this person is still living in the unit
-- **Validation**: Must be on or after the move-in date
+    `Notice Date (notice_date)`
 
-**`Notice Date (notice_date)`**
-
-- **Purpose**: When this resident provided notice to vacate
-- **Logic**: Typically 30-60 days before the move-out date, depending on lease terms
-- **Null values**: Indicates no notice has been given yet
-- **Validation**: Should be before the move-out date
-
-#### Lease Term Dates
-
-- **Start Date**: When the lease agreement begins
-- **End Date**: When the lease agreement ends (null for month-to-month leases)
+    - **Purpose**: When this resident provided notice to vacate
+    - **Logic**: Typically 30-60 days before the move-out date, depending on lease terms
+    - **Null values**: Indicates no notice has been given yet
+    - **Validation**: Should be before the move-out date
+  </Accordion>
+</AccordionGroup>
 
 <Info>
   **Lease vs Member Date Logic**
@@ -159,7 +170,7 @@ The `occupant_type` field defines a person's relationship to the lease:
   - A lease can have multiple members with different move-in/out dates
 </Info>
 
-### Current Occupant Logic
+### Occupancy
 
 **`Is Current Occupant (is_current_occupant)`**
 
@@ -178,7 +189,7 @@ The `renters_insurance` object contains policy details (currently not populated 
 - `cancelled`: Policy was cancelled
 - `not_required`: Insurance is not required for this lease
 
-### Contact Address Logic
+### Resident Contact Information 
 
 **Resident Contact Address**
 
@@ -208,11 +219,5 @@ The `renters_insurance` object contains policy details (currently not populated 
   - Prior resident's `move_out_date` reflects when they moved out
   - Lease-level dates may be updated to reflect the takeover timeline
 - **Use Case**: Track when leases are transferred between residents without creating new lease agreements
-
-### Month-to-Month Logic
-
-- **`is_month_to_month`**: Boolean indicating if lease automatically renews monthly
-- **`end_date`**: Will be `null` for month-to-month leases
-- **Renewal**: Month-to-month leases continue indefinitely until notice is given
 
 ### 
