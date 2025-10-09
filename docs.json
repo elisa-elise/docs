@@ -47,7 +47,8 @@
       {
         "tab": "API reference",
         "url": "api-reference",
-        "openapi": "./eliseopenapi.json"
+        "openapi": "./eliseopenapi.json",
+        "public": true
       }
     ],
     "global": {
