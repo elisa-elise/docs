@@ -1,0 +1,88 @@
+---
+title: "Lease Status"
+description: "Learn how lease statuses work at EliseAI"
+---
+
+## **Possible Lease Statuses**
+
+| Status        | Description                                           |
+| ------------- | ----------------------------------------------------- |
+| Applicant     | Application submitted                                 |
+| Renewing      | Renewal application                                   |
+| Future        | Lease signed, awaiting move-in                        |
+| Current       | Active lease                                          |
+| Notice        | Notice given to vacate                                |
+| Waitlist      | Waiting for availability                              |
+| Former        | Lease ended normally                                  |
+| UnderEviction | Evictioned filed, demand notice served                |
+| Evicted       | Court judgement, lockout date                         |
+| Cancelled     | Lease cancelled                                       |
+| Collections   | In collections. Outstanding balances after move out = |
+| Other         | Miscellaneous                                         |
+
+## Lease Journeys
+
+### Most Common Lease Journey
+
+```
+Applicant -> Future -> Current -> Notice -> Former
+```
+
+### Renewal Journey
+
+```
+(current lease) Current -> Renewing -> 
+(new lease) Future -> Current -> Notice -> Former
+```
+
+When the resident decides to renew, a new lease will be created where the status will be **Future** until that new lease starts. At that point the former lease will switch from **Renewing **to **Former.**
+
+### Eviction Journey
+
+```
+Current/Notice -> Under Eviction -> Evicted -> Collections
+```
+
+## Status Transitions
+
+### Applicant Status
+
+A lease that is in status **Applicant** can transition to: 
+
+- **Future**: if application is approved and lease is countersigned
+- **Cancelled**: application was rejected or withdrawn
+- **Waitlist**: no immediate availability
+
+### Future Status
+
+A lease that is in status **Future **can transition to: 
+
+- **Current: **when the move-in day arrives
+- **Cancelled: **if the lease is cancelled before move-in
+
+### Current Status
+
+A lease that is in status **Current** can transition to: 
+
+- **Notice: **if the resident gives notice to vacate
+- **Under Eviction: **if the eviction process is started
+- **Renewing: **if the renewal process is initiated
+
+### Notice Status
+
+A lease that is in status **Notice** can transition to: 
+
+- **Former: **move-out date arrives
+- **Under Eviction: **eviction filed during notice period
+
+### Former Status
+
+When a lease ends normally, the status becomes **Former**
+
+## Status Categories
+
+| **Stage of Lease** | **Status**                              |
+| ------------------ | --------------------------------------- |
+| Currently Leased   | Current, Notice, Under Eviction         |
+| Future Lease       | Future                                  |
+| Past Lease         | Former, Evicted, Collections, Cancelled |
