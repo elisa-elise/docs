@@ -1,0 +1,101 @@
+---
+title: "Charges"
+---
+
+## Failed Charge Error Messages
+
+### Duplicate external charge ID
+
+```json
+{
+    "external_charge_id": "water_jan24_unit2b",
+    "charge_id": null,
+    "success": false,
+    "error": "Charge with external_charge_id already exists"
+}
+```
+
+### Invalid Charge Code
+
+```json
+{
+    "external_charge_id": "water_jan24_unit2b",
+    "charge_id": null,
+    "success": false,
+    "error": "Charge with external_charge_id already exists"
+}
+```
+
+### Missing Charge Code Name
+
+```json
+{
+    "external_charge_id": "water_jan24_unit2b",
+    "charge_id": null,
+    "success": false,
+    "error": "Charge with external_charge_id already exists"
+}
+```
+
+### Invalid Charge Data (Validation Errors)
+
+```
+{
+    "external_charge_id": "invalid_data",
+    "charge_id": null,
+    "success": false,
+    "error": "Invalid charge data"
+}
+```
+
+### Missing Account ID
+
+```json
+{
+    "external_charge_id": "missing_account",
+    "charge_id": null,
+    "success": false,
+    "error": "CRITICAL: account_id is required for charge {charge_id} (lease {lease_id}). LeaseChargeConfig must have account_id set."
+}
+```
+
+### Lease Not Found
+
+```json
+{
+    "external_charge_id": "invalid_lease",
+    "charge_id": null,
+    "success": false,
+    "error": "Lease not found"
+}
+```
+
+### Account Not Found
+
+```json
+{
+    "external_charge_id": "invalid_account",
+    "charge_id": null,
+    "success": false,
+    "error": "Account not found"
+}
+```
+
+### Batch Size Exceeded
+
+```json
+{
+    "detail": "Batch exceeds maximum size of 100 charges"
+}
+```
+
+### General Validation Errors
+
+```json
+{
+    "external_charge_id": "validation_error",
+    "charge_id": null,
+    "success": false,
+    "error": "Validation error: {specific validation message}"
+}
+```
