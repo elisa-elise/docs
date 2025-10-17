@@ -16,30 +16,9 @@ This documentation explains the business logic and key field meanings for the El
 
 ### Lease Status
 
-The `status` field indicates the current state of a lease agreement:
+The `status` field indicates the current state of a lease agreement
 
-| Status            | Description                                    | Business Logic                                                    |
-| ----------------- | ---------------------------------------------- | ----------------------------------------------------------------- |
-| **Applicant**     | Application submitted but not yet approved     | Person has applied but lease is not yet signed or approved        |
-| **Future**        | Approved lease with future start date          | Lease is signed but move-in date hasn't arrived yet               |
-| **Current**       | Active lease with residents living in the unit | Lease is active and residents are currently occupying the unit    |
-| **Notice**        | Lease with notice to vacate given              | Resident has given notice to move out but hasn't moved yet        |
-| **Waitlist**      | Person is on a waitlist for a unit             | Person is waiting for a unit to become available                  |
-| **Former**        | Lease has ended and residents have moved out   | Lease period is complete and residents are no longer living there |
-| **UnderEviction** | Eviction process has been initiated            | Legal eviction proceedings are underway                           |
-| **Evicted**       | Residents have been legally evicted            | Eviction process completed, residents removed                     |
-| **Cancelled**     | Lease was cancelled before completion          | Lease was terminated before residents moved in or during the term |
-| **Collections**   | Account is in collections for unpaid amounts   | Financial obligations remain unpaid and account is in collections |
-| **Other**         | Catch-all for undefined statuses               | Used when status doesn't fit other categories                     |
-
-<Info>
-  **Status Transition Logic**
-
-  - Residents typically progress: APPLICANT → FUTURE → RESIDENT → NOTICE → FORMER
-  - Leases can be CANCELLED at any point before completion
-  - Eviction process: RESIDENT → UNDER_EVICTION → EVICTED
-  - Collections status is independent of resident status
-</Info>
+View our [Lease Status](/leases/statuses) page for more details.
 
 ### Resident Status
 
