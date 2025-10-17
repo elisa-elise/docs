@@ -39,7 +39,7 @@
             "group": "Leases",
             "pages": [
               "leases/key-fields",
-              "leases/workflows"
+              "leases/statuses"
             ]
           },
           {
