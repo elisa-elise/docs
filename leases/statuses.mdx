@@ -1,7 +1,6 @@
 ---
 title: "Lease Status"
 description: "Learn how lease statuses work at EliseAI"
-public: true
 ---
 
 ## **Possible Lease Statuses**
@@ -44,7 +43,8 @@ Here's the full progression:
 <Steps>
   <Step title="Step 1: Offer Selection">
     - Resident selects a renewal offer
-    - New Lease created with \*\*Renewing \*\*status
+    - New lease created with **Renewing** status
+    - New lease **move in** **date** is set to previous lease **move in date**
     - Lease document Generated
   </Step>
   <Step title="Step 2: E-Signature Process">
@@ -52,17 +52,17 @@ Here's the full progression:
     - Both resident and management company sign
   </Step>
   <Step title="Step 3: Counter-Signing Complete">
-    - When \*\*both parties have signed \*\*(counter-signed)
-    - leasestatus changes **Renewing -\> Future**
-    - Resident status changes from **Current -\> Future Resident**
-    - Lease Charge Config (LLC) becomes Active
+    - New lease status changes **Renewing -\> Future**
   </Step>
   <Step title="Step 4: Lease Start">
     - When lease start date arrives
-    - Lease status changes **Future -\> Current**
-    - Resident status changes **Future Resident -\> Current**
+      - New lease status changes **Future -\> Current**
   </Step>
 </Steps>
+
+<Info>
+  **Resident **
+</Info>
 
 ### Eviction Journey
 
