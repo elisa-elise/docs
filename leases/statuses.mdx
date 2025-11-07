@@ -41,22 +41,17 @@ Renewing -> Future -> Current (when renewal starts)
 Here's the full progression:
 
 <Steps>
-  <Step title="Step 1: Offer Selection">
-    - Resident selects a renewal offer
+  <Step title="Resident Confirms Renewal ">
     - New lease created with **Renewing** status
     - New lease **move in** **date** is set to previous lease **move in date**
-    - Lease document Generated
   </Step>
-  <Step title="Step 2: E-Signature Process">
-    - Lease document sent for electronic signature
-    - Both resident and management company sign
+  <Step title="Lease Signature Complete">
+    - New lease status changes from **Renewing **to**Future** 
   </Step>
-  <Step title="Step 3: Counter-Signing Complete">
-    - New lease status changes **Renewing -\> Future**
-  </Step>
-  <Step title="Step 4: Lease Start">
-    - When lease start date arrives
-      - New lease status changes **Future -\> Current**
+  <Step title="New Lease Start Date Arrives">
+    - Former lease status changes from **Current **to**Former** 
+    - New lease status changes from **Future **to**Current** 
+    - **Move in date** for new lease is set to move in date from former lease
   </Step>
 </Steps>
 
