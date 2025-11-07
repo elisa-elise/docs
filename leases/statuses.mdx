@@ -61,7 +61,32 @@ Here's the full progression:
 </Steps>
 
 <Info>
-  **Resident Id **will be the same of both leases.
+  **Resident UUID **will be the same of both leases.
+</Info>
+
+### Lease Transfer Journey
+
+```
+Original lease status changes
+Current -> Notice -> Former
+
+New lease status
+Future -> Current
+```
+
+<Steps>
+  <Step title="Resident confirms transfer">
+    - Current lease status goes from **Current **to **Notice**
+    - New lease is created with status **Future**
+  </Step>
+  <Step title="After Move Out">
+    - Former lease is set from **Notice **to **Former**
+    - New lease is set to status **Current**
+  </Step>
+</Steps>
+
+<Info>
+  **Resident UUID **will be the same of both leases.
 </Info>
 
 ### Eviction Journey
