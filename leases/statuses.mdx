@@ -5,20 +5,20 @@ description: "Learn how lease statuses work at EliseAI"
 
 ## **Possible Lease Statuses**
 
-| Status            | Description                                    | Business Logic                                                                              |
-| :---------------- | :--------------------------------------------- | :------------------------------------------------------------------------------------------ |
-| **Applicant**     | Application submitted but not yet approved     | Person has applied but lease is not yet signed or approved                                  |
-| **Renewing**      | Resident will be renewing their current lease  | Lease is active. There will be another lease this resident is tied to, with status "Future" |
-| **Future**        | Approved lease with future start date          | Lease is signed but move-in date hasn't arrived yet                                         |
-| **Current**       | Active lease with residents living in the unit | Lease is active and residents are currently occupying the unit                              |
-| **Notice**        | Lease with notice to vacate given              | Resident has given notice to move out but hasn't moved yet                                  |
-| **Waitlist**      | Person is on a waitlist for a unit             | Person is waiting for a unit to become available                                            |
-| **Former**        | Lease has ended and residents have moved out   | Lease period is complete and residents are no longer living there                           |
-| **UnderEviction** | Eviction process has been initiated            | Legal eviction proceedings are underway                                                     |
-| **Evicted**       | Residents have been legally evicted            | Eviction process completed, residents removed                                               |
-| **Cancelled**     | Lease was cancelled before completion          | Lease was terminated before residents moved in or during the term                           |
-| **Collections**   | Account is in collections for unpaid amounts   | Financial obligations remain unpaid and account is in collections                           |
-| **Other**         | Catch-all for undefined statuses               | Used when status doesn't fit other categories                                               |
+| Status            | Description                                                                             | Business Logic                                                                                                            |
+| :---------------- | :-------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------ |
+| **Applicant**     | Application submitted but not yet approved                                              | Person has applied but lease is not yet signed or approved                                                                |
+| **Renewing**      | New renewal lease created but not yet signed (resident is renewing their current lease) | Current lease is active. A new renewal lease is created with status "Renewing" which transitions to "Future" when signed. |
+| **Future**        | Approved lease with future start date                                                   | Lease is signed but move-in date hasn't arrived yet                                                                       |
+| **Current**       | Active lease with residents living in the unit                                          | Lease is active and residents are currently occupying the unit                                                            |
+| **Notice**        | Lease with notice to vacate given                                                       | Resident has given notice to move out but hasn't moved yet                                                                |
+| **Waitlist**      | Person is on a waitlist for a unit                                                      | Person is waiting for a unit to become available                                                                          |
+| **Former**        | Lease has ended and residents have moved out                                            | Lease period is complete and residents are no longer living there                                                         |
+| **UnderEviction** | Eviction process has been initiated                                                     | Legal eviction proceedings are underway                                                                                   |
+| **Evicted**       | Residents have been legally evicted                                                     | Eviction process completed, residents removed                                                                             |
+| **Cancelled**     | Lease was cancelled before completion                                                   | Lease was terminated before residents moved in or during the term                                                         |
+| **Collections**   | Account is in collections for unpaid amounts                                            | Financial obligations remain unpaid and account is in collections                                                         |
+| **Other**         | Catch-all for undefined statuses                                                        | Used when status doesn't fit other categories                                                                             |
 
 ## Lease Journeys
 
@@ -29,6 +29,8 @@ Applicant -> Future -> Current -> Notice -> Former
 ```
 
 ### Renewal Journey
+
+During renewal, there are two leases: (1) the original/current lease that is expiring, and (2) the new renewal lease. The original lease remains "Current" until the renewal lease start date arrives, at which point it becomes "Former".
 
 ```
 Original lease status changes
@@ -46,17 +48,17 @@ Here's the full progression:
     - New lease **move in** **date** is set to previous lease **move in date**
   </Step>
   <Step title="Lease Signature Complete">
-    - New lease status changes from **Renewing **to**Future** 
+    - New lease status changes from ****Renewing toFuture****
   </Step>
   <Step title="New Lease Start Date Arrives">
-    - Former lease status changes from **Current **to**Former** 
-    - New lease status changes from **Future **to**Current** 
+    - Former lease status changes from ****Current to Former****
+    - New lease status changes from ****Future to Current****
     - **Move in date** for new lease is set to move in date from former lease
   </Step>
 </Steps>
 
 <Info>
-  **Resident UUID **will be the same of both leases.
+  **Resident UUID** will be the same of both leases.
 </Info>
 
 ### Lease Transfer Journey
@@ -71,17 +73,17 @@ Future -> Current
 
 <Steps>
   <Step title="Resident confirms transfer">
-    - Current lease status goes from **Current **to **Notice**
+    - Current lease status goes from \*\*Current \*\*to **Notice**
     - New lease is created with status **Future**
   </Step>
   <Step title="After Move Out">
-    - Former lease is set from **Notice **to **Former**
+    - Former lease is set from \*\*Notice \*\*to **Former**
     - New lease is set to status **Current**
   </Step>
 </Steps>
 
 <Info>
-  **Resident UUID **will be the same of both leases.
+  \*\*Resident UUID \*\*will be the same of both leases.
 </Info>
 
 ### Eviction Journey
@@ -113,7 +115,6 @@ A lease that is in status **Current** can transition to:
 
 - **Notice:** if the resident gives notice to vacate
 - **Under Eviction:** if the eviction process is started
-- **Renewing:** if the renewal process is initiated
 
 ### Notice Status
 
@@ -129,6 +130,20 @@ When a lease ends normally, the status becomes **Former**
 ### Cancelled Status
 
 Leases can be cancelled at any point before completion.
+
+### Renewing Status
+
+Can transition to:
+
+- **Future**: when signed
+- **Cancelled: **If renewal is cancelled
+
+### Under Eviction Status
+
+Can transition to: 
+
+- **Evicted: **eviction completed
+- **Current: **if eviction is resolved
 
 ## Status Categories
 

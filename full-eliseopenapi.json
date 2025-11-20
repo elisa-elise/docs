@@ -1198,8 +1198,8 @@
             "get": {
                 "x-mint": {
                   "metadata": {
-                    "tag": "Private", 
-                    "public":true
+                    "tag": "Private" 
+                    
                   }
                 },
                 "tags": [
