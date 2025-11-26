@@ -7,6 +7,10 @@ Webhook events are sent as POST requests to the desired endpoint agreed upon wit
 
 Best practice is to handle these asynchronously (i.e. record webhook message, return success response, and then separately handle processing) EliseAI tracks deliverability/success of all webhook events. Webhook events are provided with a signature.
 
+<Note>
+  **Important:** EliseAI does **not guarantee sequencing** of webhook deliveries. Integrations **must be able to handle events that may arrive out of order**
+</Note>
+
 ## Configuration
 
 ### EliseAI IP Addresses
@@ -38,5 +42,5 @@ else:
 </Card>
 
 <Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
+  **Need help?** Ask us anything at **support@eliseai.com**
 </Note>
