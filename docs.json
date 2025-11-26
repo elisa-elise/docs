@@ -28,11 +28,12 @@
         "tab": "Guides",
         "groups": [
           {
-            "group": "Getting Started",
+            "group": "EliseAI API",
             "pages": [
               "quickstart",
               "webhooks",
-              "rate-limiting"
+              "rate-limiting",
+              "certification"
             ]
           },
           {
