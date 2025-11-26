@@ -15,10 +15,6 @@
             "get": {
                 "x-mint": {
                   "metadata": {
-                    "groups": [
-                      "ADMIN"
-                    ],
-                    "tag": "Private",
                     "public": true
                   }
                 },
@@ -73,10 +69,6 @@
             "post": {
                 "x-mint": {
                   "metadata": {
-                    "groups": [
-                      "ADMIN"
-                    ],
-                    "tag": "Private",
                     "public": true
                   }
                 },
@@ -130,10 +122,6 @@
             "post": {
                 "x-mint": {
                   "metadata": {
-                    "groups": [
-                      "ADMIN"
-                    ],
-                    "tag": "Private",
                     "public": true
                   }
                 },
@@ -182,13 +170,9 @@
             }
         },
         "/v1/property/{property_id}/appointments/availability": {
-            "get": 
+            "get": {
                 "x-mint": {
                   "metadata": {
-                    "groups": [
-                      "ADMIN"
-                    ],
-                    "tag": "Private",
                     "public": true
                   }
                 },
@@ -273,10 +257,6 @@
             "post": {
                 "x-mint": {
                   "metadata": {
-                    "groups": [
-                      "ADMIN"
-                    ],
-                    "tag": "Private",
                     "public": true
                   }
                 },
