@@ -22,18 +22,18 @@ Example:
 
 Every API response includes standard rate limiting headers to help you track your usage:
 
-| Header                  | Description                                                                                      |
-| :---------------------- | :----------------------------------------------------------------------------------------------- |
-| `X-RateLimit-Limit`     | <u>The maximum number of requests allowed for your current endpoint and vendor configuration</u> |
-| `X-RateLimit-Remaining` | <u>The number of requests remaining in the current rate limit window</u>                         |
-| `X-RateLimit-Reset`     | <u>The number of seconds until your rate limit resets</u>                                        |
+| Header                  | Description                                                                               |
+| :---------------------- | :---------------------------------------------------------------------------------------- |
+| `X-RateLimit-Limit`     | The maximum number of requests allowed for your current endpoint and vendor configuration |
+| `X-RateLimit-Remaining` | The number of requests remaining in the current rate limit window                         |
+| `X-RateLimit-Reset`     | The number of seconds until your rate limit resets                                        |
 
 These headers follow the [IETF RFC draft standard](https://www.ietf.org/archive/id/draft-polli-ratelimit-headers-02.html).
 
 ### Example Response Headers
 
 ```
-X-RateLimit-Limit: 500
+X-RateLimit-Limit: 2000
 X-RateLimit-Remaining: 247
 X-RateLimit-Reset: 1842
 ```
