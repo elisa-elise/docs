@@ -1,0 +1,69 @@
+---
+title: "EliseAPI Vendor Certification Guide"
+description: "Elise’s Vendor API Certification program ensures that integrations with our platform are reliable, consistent, and aligned with best practices. Certification is a required lightweight collaborative process designed to help vendors validate their implementation, reduce support issues, and ensure a smooth experience for our mutual clients. "
+---
+
+## When to do the Certification
+
+Certification should be done**near the end of development** , but before enabling the integration for the first production client. It shouldn’t happen too early (otherwise you won’t be able to show anything meaningful) or too late (otherwise fixes become expensive). 
+
+<Check>
+  It should happen once: 
+
+  - You have a functioning sanbox integration
+  - Core endpoints or webhooks are implemented
+  - Data is real enough to demonstrate the workflows you're implementing
+  - Before going live for the first client
+</Check>
+
+## How Certification Works
+
+Our certification process is simple and typically takes **30 minutes.** The goal is to verify that your integration correctly interacts with our APIs and webhooks in a way that aligns with how our platform is designed.
+
+### Step 1: **Build and test your integrations in the sandbox**
+
+Before scheduling the certification session, you should have a **working implementation **of your integration in our sandbox environment. This includes: 
+
+- Reviewing our API documentation
+- Setting up authentication
+- Implementing the API endpoints or webhook handling needed for your use case
+- Testing your workflows end-to-end in the sandbox
+
+### **Step 2: Share your integration workflows & complete the checklist**
+
+At least 3 days before the certification session, please send us the list of workflows your integration supports. We ask you follow the format below:
+
+```
+Workflow 1: Pull Unit Availability
+
+Purpose: Retrieve current unit availability to sync with our internal pricing engine.
+API Endpoints Used: GET /v2/prosperties/{property_id}/units
+Trigger & Frequency: Daily
+
+Workflow 2: ...
+```
+
+### **Step 3: 30 Minute Live Session**
+
+You’ll join a short live video call with our technical team to walk through the key parts of your integration. It is a collaborative session, no formal presentation required. You simply share your screen and walk us through your setup. 
+
+- **Workflow Demo: **walk us through the main workflows you’re implementing (from the list you provided in step 2). For each workflow:
+  - We or you trigger the right action in each system
+  - We look at the resulting data flow (request → response → processing/display)
+- **Core API Usage: **we’ll review the API endpoints your integration relies on
+  - How your system authenticates using your API credentials
+  - The endpoints that are called and their frequency
+  - How you handle pagination, filtering, and error responses
+- **Webhook Handling: **if using webhooks, walk us through how you:
+  - Validate and store payloads
+  - Handle duplicate events, retries, our out-of-order delivery
+
+### **Step 4: Certification Result**
+
+<Info>
+  Outcome is one of: 
+
+  - <Icon icon="check" iconType="sharp-solid" color="#0b6e23" size={12} /> Certified
+  - <Icon icon="brake-warning" iconType="sharp-solid" color="#e58d2f" size={12} /> Certified with Notes (minor issues, no blocker)
+  - <Icon icon="circle-stop" iconType="sharp-solid" color="#dd4545" size={12} /> Not Certified Yet (things need to be fixed before going live)
+</Info>
