@@ -13,6 +13,15 @@
     "paths": {
         "/v1/prospect/{elise_prospect_id}": {
             "get": {
+                "x-mint": {
+                  "metadata": {
+                    "groups": [
+                      "ADMIN"
+                    ],
+                    "tag": "Private",
+                    "public": true
+                  }
+                },
                 "tags": [
                     "Prospect"
                 ],
@@ -62,6 +71,15 @@
         },
         "/v1/prospect": {
             "post": {
+                "x-mint": {
+                  "metadata": {
+                    "groups": [
+                      "ADMIN"
+                    ],
+                    "tag": "Private",
+                    "public": true
+                  }
+                },
                 "tags": [
                     "Prospect"
                 ],
@@ -110,6 +128,15 @@
         },
         "/v1/prospect/vendor_chat": {
             "post": {
+                "x-mint": {
+                  "metadata": {
+                    "groups": [
+                      "ADMIN"
+                    ],
+                    "tag": "Private",
+                    "public": true
+                  }
+                },
                 "tags": [
                     "Prospect"
                 ],
@@ -155,7 +182,16 @@
             }
         },
         "/v1/property/{property_id}/appointments/availability": {
-            "get": {
+            "get": 
+                "x-mint": {
+                  "metadata": {
+                    "groups": [
+                      "ADMIN"
+                    ],
+                    "tag": "Private",
+                    "public": true
+                  }
+                },
                 "tags": [
                     "Calendar"
                 ],
@@ -235,6 +271,15 @@
         },
         "/v1/prospect/{elise_prospect_id}/appointment": {
             "post": {
+                "x-mint": {
+                  "metadata": {
+                    "groups": [
+                      "ADMIN"
+                    ],
+                    "tag": "Private",
+                    "public": true
+                  }
+                },
                 "tags": [
                     "Calendar"
                 ],
@@ -294,6 +339,15 @@
         },
         "/v1/prospect/appointment": {
             "post": {
+                "x-mint": {
+                  "metadata": {
+                    "groups": [
+                      "ADMIN"
+                    ],
+                    "tag": "Private",
+                    "public": true
+                  }
+                },
                 "tags": [
                     "Calendar"
                 ],
