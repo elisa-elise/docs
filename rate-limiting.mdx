@@ -9,24 +9,26 @@ Our API implements rate limiting to ensure fair usage and maintain service relia
 
 ## Rate Limit Configuration
 
-Your rate limit is based on the number of buildings your vendor account has access to:
+<Info>
+  The default rate limit for our API is **2,000 calls per endpoint per hour. **
 
-- **Rate Limit:** 10 requests per hour × number of buildings you have access to
-- _Example: Access to 50 buildings = 500 requests per hour_
+  If the endpoint includes a **property_id** as a parameter, we allow **2,000 calls per endpoint per property_id per hour**.
+</Info>
 
-### Multiple Bundles
+Example: 
 
-If your vendor account is assigned to multiple bundles, the rate limit for each request is determined by the specific bundle being accessed in that request.
+- **/v1/prospect/{elise_prospect_id}:** can be called 2,000 times per hour
+- **/v1/properties/{property_id}/units**: can be called 2,000 times per property_id per hour 
 
 ## Rate Limit Headers
 
 Every API response includes standard rate limiting headers to help you track your usage:
 
-| Header                  | Description                                                                               | |
-| :---------------------- | :---------------------------------------------------------------------------------------- | --- |
-| `X-RateLimit-Limit`     | The maximum number of requests allowed for your current endpoint and vendor configuration | |
-| `X-RateLimit-Remaining` | The number of requests remaining in the current rate limit window                         | |
-| `X-RateLimit-Reset`     | The number of seconds until your rate limit resets                                        | |
+| Header                  | Description                                                                                      |
+| :---------------------- | :----------------------------------------------------------------------------------------------- |
+| `X-RateLimit-Limit`     | <u>The maximum number of requests allowed for your current endpoint and vendor configuration</u> |
+| `X-RateLimit-Remaining` | <u>The number of requests remaining in the current rate limit window</u>                         |
+| `X-RateLimit-Reset`     | <u>The number of seconds until your rate limit resets</u>                                        |
 
 These headers follow the [IETF RFC draft standard](https://www.ietf.org/archive/id/draft-polli-ratelimit-headers-02.html).
 
@@ -56,4 +58,4 @@ To avoid hitting rate limits:
 
 ## Need a Higher Rate Limit?
 
-If your integration requires a higher rate limit, please contact our support team to discuss your use case and explore available options.
+If your integration requires a higher rate limit, please contact our support team (support@eliseai.com) to discuss your use case and explore available options.
