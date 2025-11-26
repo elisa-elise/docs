@@ -1,17 +1,19 @@
 ---
 title: "Quickstart"
 public: true
+description: "Learn how to integrate with EliseAI"
 ---
 
 ## API Conventions
 
-The EliseAI API communicates using standard HTTP methods and returns responses in JSON format. It relies on standard HTTP status codes to report success or failure. For security and privacy, all requests must be made over HTTPS; HTTP connections are not supported. 
+The EliseAI API communicates using standard HTTP methods and returns responses in JSON format. It relies on standard HTTP status codes to report success or failure. For security and privacy, all requests must be made over HTTPS; HTTP connections are not supported.
 
 ## Prerequisites
 
 Before you begin you'll need:
 
 - A Bearer token (see Authentication section below)
+- A test environment (created by the EliseAI team upon request)
 
 ## Authentication
 
@@ -31,7 +33,7 @@ Authorization: Bearer YOUR_API_TOKEN
 
 Once you have your token, you can start making requests to the EliseAI API.
 
-### Example: Fetch Prospects
+### Example: Fetch Properties
 
 Here's a basic example using cURL:
 
@@ -90,13 +92,12 @@ All API responses are returned in JSON format. A successful response will return
       "status": "active",
       "address": {
         "street_address": "82 Schermerhorn St",
-        "unit_number": null,
         "city": "Brooklyn",
         "state": "NY",
         "postal_code": "10349",
         "country": "US"
       },
-      "total_units": null,
+      "total_units": 250,
       "external_ids": []
     }
   ],
