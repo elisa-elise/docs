@@ -9,16 +9,14 @@ Our API implements rate limiting to ensure fair usage and maintain service relia
 
 ## Rate Limit Configuration
 
-<Info>
-  The default rate limit for our API is **2,000 calls per endpoint per hour**. 
+<u>The default rate limit for our API is </u>**_<u>2,000 calls per endpoint per hour</u>_**_<u>.</u>_
 
-  If the endpoint includes a **property_id** as a parameter, we allow **2,000 calls per endpoint per property_id per hour**.
-</Info>
+If the endpoint includes a **property_id** as a parameter, we allow **_<u>2,000 calls per endpoint per property_id per hour</u>_**_<u>.</u>_
 
 Example:
 
 - **/v1/prospect/:** can be called 2,000 times per hour
-- **/v1/properties/{property_id}/units**: can be called 2,000 times per property_id per hour
+- **/v1/properties//units**: can be called 2,000 times per property_id per hour
 
 ## Rate Limit Headers
 
