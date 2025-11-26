@@ -10,15 +10,15 @@ Our API implements rate limiting to ensure fair usage and maintain service relia
 ## Rate Limit Configuration
 
 <Info>
-  The default rate limit for our API is **2,000 calls per endpoint per hour. **
+  The default rate limit for our API is **2,000 calls per endpoint per hour**. 
 
   If the endpoint includes a **property_id** as a parameter, we allow **2,000 calls per endpoint per property_id per hour**.
 </Info>
 
-Example: 
+Example:
 
-- **/v1/prospect/{elise_prospect_id}:** can be called 2,000 times per hour
-- **/v1/properties/{property_id}/units**: can be called 2,000 times per property_id per hour 
+- **/v1/prospect/:** can be called 2,000 times per hour
+- **/v1/properties//units**: can be called 2,000 times per property_id per hour
 
 ## Rate Limit Headers
 
@@ -58,4 +58,4 @@ To avoid hitting rate limits:
 
 ## Need a Higher Rate Limit?
 
-If your integration requires a higher rate limit, please contact our support team (support@eliseai.com) to discuss your use case and explore available options.
+If your integration requires a higher rate limit, please contact our support team ([support@eliseai.com](mailto:support@eliseai.com)) to discuss your use case and explore available options.
